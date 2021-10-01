@@ -6,7 +6,7 @@
   --color-text-secondary: #4e4e4e;
   --color-text-third: #999;
   --color-border: #eee;
-  --background-image: url("/images/theme/welcome-image.jpg");
+  --background-image: url("/images/theme/Default.jpg");
   --loading-image: url("/images/theme/loading.gif");
   --lazyload-image: url("/images/theme/loading.gif");
 }
@@ -1192,7 +1192,7 @@ body input {
   font-size: 3.5em;
   font-family: 'Quicksand', 'Vollkorn', serif;
   font-weight: 300;
-  color: #fff;
+  color: #808080;
   margin: 0;
 }
 .preview .preview-motto-wrapper .preview-cursor {
