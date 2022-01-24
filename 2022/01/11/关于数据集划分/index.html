@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+
+    
+
+    
+
+    <title>关于数据集划分 | Cenehlm&#39;s blogs</title>
+    <meta name="author" content="Cenehlm" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="主要关心一下分组划分和分层划分留出法最基本的就是train_test_split ，对于id都不同时使用，其中注意stratify参数，可以按照原始样本中不同类比例进行划分，划分出的训练集和验证集中类比例就是原始样本中的类比例，类不平衡时可以用如果对于同一批次id相同的数据，要自己根据id划分交叉验证kfold最基本k折划分groupkfold可以分组划分，group参数决定了哪些分在一起，有点像是对id进行k折，如果将样本id传给group参数，可以确保相同id划分在一起StratifiedK" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+    
+    <link rel="alternate" href="/cenhelm.github.io/atom.xml" title="Cenehlm&#39;s blogs" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cenhelm.github.io/images/favicon.ico">
+    
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'icomoon';
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml");
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
+             url("/cenhelm.github.io/fonts/icomoon.ttf?q628ml") format('truetype'),
+             url("/cenhelm.github.io/fonts/icomoon.woff?q628ml") format('woff'),
+             url("/cenhelm.github.io/fonts/icomoon.svg?q628ml#icomoon") format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    
+<link rel="stylesheet" href="/cenhelm.github.io/css/style.css">
+
+
+    <!--[if lt IE 9]><style type="text/css">.nav-inner {top:0;}.author-meta {position:static;top:0;}.search-form {height:36px;}</style><script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+
+    <main class="app">
+        <header id="header" class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">Cenehlm&#39;s blogs</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/cenhelm.github.io/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/ML">
+                <span class="nav-text">ML</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%AF%94%E8%B5%9B">
+                <span class="nav-text">比赛</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%95%99%E5%87%BA%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">留出法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="toc-number">2.</span> <span class="toc-text">交叉验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text">自助法</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content">
+            <div id="wrapper" class="wrapper" style="max-width: 800px">
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            关于数据集划分
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/01/11/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-01-11T06:07:41.513Z" itemprop="datePublished">2022-01-11</time>
+</a>
+
+            
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>主要关心一下分组划分和分层划分</p>
+<span id="more"></span>
+<h2 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h2><ol>
+<li>最基本的就是train_test_split ，对于id都不同时使用，其中注意<strong>stratify</strong>参数，可以按照原始样本中不同类比例进行划分，划分出的训练集和验证集中类比例就是原始样本中的类比例，类不平衡时可以用</li>
+<li>如果对于同一批次id相同的数据，要自己根据id划分</li>
+</ol>
+<h2 id="交叉验证"><a href="#交叉验证" class="headerlink" title="交叉验证"></a>交叉验证</h2><ol>
+<li>kfold最基本k折划分</li>
+<li>groupkfold可以分组划分，group参数决定了哪些分在一起，有点像是对id进行k折，如果将样本id传给group参数，可以确保相同id划分在一起</li>
+<li>StratifiedKFold分层k折，类似与train_test_split中stratify参数的作用</li>
+</ol>
+<h2 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h2><p>效果最差不喜欢用</p>
+
+        
+    </section>
+</article>
+
+
+
+<a id="pagenext" href="/cenhelm.github.io/2021/09/30/hello-world/" class="article-next" title="Hello World"><i class="icon-arrow-right"></i></a>
+
+
+<a id="pageprev" href="/cenhelm.github.io/2022/01/24/mathorcup2022%E5%88%9D%E8%B5%9B/" class="article-prev" title="mathorcup2022初赛 赛道A"><i class="icon-arrow-left"></i></a>
+
+
+
+
+            </div>
+        </div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?e4027971a230b210f4671f485b33846a";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://unpkg.com/jquery@1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle('normal', slideDone);
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp('normal', slideDone);
+            }, 3000);
+        }
+
+        function slideDone() {
+            if (nodes.navInner.css('display') !== 'none') {
+                nodes.navInner.css('display', '');
+            }
+        }
+
+        $(window).on('resize', function() {
+            if ($(this).width() > 960) {
+                nodes.navInner.css('display', '');
+            }
+        });
+    });
+    </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
+    
+
+<script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

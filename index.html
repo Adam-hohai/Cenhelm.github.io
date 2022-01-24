@@ -132,6 +132,43 @@
     <header class="article-header">
         
         <h1 itemprop="name">
+            <a href="/cenhelm.github.io/2022/01/24/mathorcup2022%E5%88%9D%E8%B5%9B/">mathorcup2022初赛 赛道A</a>
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-01-24T13:37:03.362Z" itemprop="datePublished">2022-01-24</time>
+</a>
+
+            
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>赛道A由58同城出题，主要做二手车交易价格预测</p>
+        
+        <p class="article-more-link">
+            <a href="/cenhelm.github.io/2022/01/24/mathorcup2022%E5%88%9D%E8%B5%9B/#more">
+                <span class="vm">阅读更多</span>
+                <i class="icon-arrow-double-right vm"></i>    
+            </a>
+        </p>
+        
+        
+    </section>
+</article>
+
+
+    <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
             <a href="/cenhelm.github.io/2022/01/11/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/">关于数据集划分</a>
         </h1>
         
@@ -150,18 +187,15 @@
     
     <section class="article-body markdown-body">
         
-        <span id="more"></span>
-<h2 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h2><ol>
-<li>最基本的就是train_test_split ，对于id都不同时使用，其中注意<strong>stratify</strong>参数，可以按照原始样本中不同类比例进行划分，划分出的训练集和验证集中类比例就是原始样本中的类比例，类不平衡时可以用</li>
-<li>如果对于同一批次id相同的数据，要自己根据id划分</li>
-</ol>
-<h2 id="交叉验证"><a href="#交叉验证" class="headerlink" title="交叉验证"></a>交叉验证</h2><ol>
-<li>kfold最基本k折划分</li>
-<li>groupkfold可以分组划分，group参数决定了哪些分在一起，有点像是对id进行k折，如果将样本id传给group参数，可以确保相同id划分在一起</li>
-<li>StratifiedKFold分层k折，类似与train_test_split中stratify参数的作用</li>
-</ol>
-<h2 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h2><p>效果最差不喜欢用</p>
-
+        <p>主要关心一下分组划分和分层划分</p>
+        
+        <p class="article-more-link">
+            <a href="/cenhelm.github.io/2022/01/11/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/#more">
+                <span class="vm">阅读更多</span>
+                <i class="icon-arrow-double-right vm"></i>    
+            </a>
+        </p>
+        
         
     </section>
 </article>
@@ -190,20 +224,15 @@
     
     <section class="article-body markdown-body">
         
-        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
+        <p>测试一下</p>
+        
+        <p class="article-more-link">
+            <a href="/cenhelm.github.io/2021/09/30/hello-world/#more">
+                <span class="vm">阅读更多</span>
+                <i class="icon-arrow-double-right vm"></i>    
+            </a>
+        </p>
+        
         
     </section>
 </article>
