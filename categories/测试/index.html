@@ -7,7 +7,7 @@
 
     
 
-    <title>Cenehlm&#39;s blogs</title>
+    <title>Category: 测试 | Cenehlm&#39;s blogs</title>
     <meta name="author" content="Cenehlm" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
@@ -52,7 +52,7 @@
 
     <nav id="nav-inner" class="nav-inner">
         
-            <a class="nav-item active" href="/cenhelm.github.io/">
+            <a class="nav-item" href="/cenhelm.github.io/">
                 <span class="nav-text">首页</span>
             </a>
         
@@ -132,51 +132,11 @@
     <header class="article-header">
         
         <h1 itemprop="name">
-            <a href="/cenhelm.github.io/2022/01/11/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/">关于数据集划分</a>
-        </h1>
-        
-        <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/index.html">
-    
-    <i class="icon-calendar vm"></i>
-    
-    <time class="vm" datetime="2022-01-11T06:07:41.513Z" itemprop="datePublished">2022-01-11</time>
-</a>
-
-            
-
-        </div>
-    </header>
-    
-    <section class="article-body markdown-body">
-        
-        <span id="more"></span>
-<h2 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h2><ol>
-<li>最基本的就是train_test_split ，对于id都不同时使用，其中注意<strong>stratify</strong>参数，可以按照原始样本中不同类比例进行划分，划分出的训练集和验证集中类比例就是原始样本中的类比例，类不平衡时可以用</li>
-<li>如果对于同一批次id相同的数据，要自己根据id划分</li>
-</ol>
-<h2 id="交叉验证"><a href="#交叉验证" class="headerlink" title="交叉验证"></a>交叉验证</h2><ol>
-<li>kfold最基本k折划分</li>
-<li>groupkfold可以分组划分，group参数决定了哪些分在一起，有点像是对id进行k折，如果将样本id传给group参数，可以确保相同id划分在一起</li>
-<li>StratifiedKFold分层k折，类似与train_test_split中stratify参数的作用</li>
-</ol>
-<h2 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h2><p>效果最差不喜欢用</p>
-
-        
-    </section>
-</article>
-
-
-    <article class="article" itemscope itemprop="blogPost">
-    
-    <header class="article-header">
-        
-        <h1 itemprop="name">
             <a href="/cenhelm.github.io/2021/09/30/hello-world/">Hello World</a>
         </h1>
         
         <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/index.html">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/categories/%E6%B5%8B%E8%AF%95/index.html">
     
     <i class="icon-calendar vm"></i>
     
