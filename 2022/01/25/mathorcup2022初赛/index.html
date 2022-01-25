@@ -64,10 +64,6 @@
                 <span class="nav-text">比赛</span>
             </a>
         
-            <a class="nav-item" href="/cenhelm.github.io/tags">
-                <span class="nav-text">标签</span>
-            </a>
-        
             <a class="nav-item" href="/cenhelm.github.io/archives">
                 <span class="nav-text">归档</span>
             </a>
@@ -90,7 +86,7 @@
         
 
         
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">数据描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E6%A0%87"><span class="toc-number">3.</span> <span class="toc-text">指标</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">问题背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%8F%8F%E8%BF%B0"><span class="toc-number">2.</span> <span class="toc-text">数据描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E6%A0%87"><span class="toc-number">3.</span> <span class="toc-text">指标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">预处理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E6%9E%84%E9%80%A0"><span class="toc-number">5.</span> <span class="toc-text">特征构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="toc-number">6.</span> <span class="toc-text">模型训练</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%84%9F%E6%83%B3"><span class="toc-number">7.</span> <span class="toc-text">感想</span></a></li></ol>
         
     </div>
 </aside>
@@ -131,8 +127,24 @@
 <span id="more"></span>
 <h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>随着我国的机动车数量不断增长，人均保有量也随之增加，机动车以“二手车”形式在流通环节，包括二手车收车、二手车拍卖、二手车零售、二手车置换等环节的流通需求越来越大。二手车作为一种特殊的“电商商品”，因为其“一车一况”的特性比一般电商商品的交易要复杂得多，究其原因是二手车价格难于准确估计和设定，不但受到车本身基础配置，如品牌、车系、动力等的影响，还受到车况如行驶里程、车身受损和维修情况等的影响，甚至新车价格的变化也会对二手车价格带来作用。目前国家并没有出台一个评判二手车资产价值的标准。一些二手车交易平台和二手车第三方估价平台都从自身的角度建立了一系列估价方法用于评估二手车资产的价值。</p>
 <p>在一个典型的二手车零售场景，二手车一般通过互联网等线上渠道获取用户线索，线下实体门店对外展销和售卖，俗称 O2O 门店模式。门店通过“买手”从个人或其他渠道收购二手车，然后由门店定价师定价销售，二手车商品和其他商品一样，如果定价太高滞销也会打折促销，甚至直接以较低的价格打包批发，直至商品最终卖出。</p>
-<h2 id="数据描述"><a href="#数据描述" class="headerlink" title="数据描述"></a>数据描述</h2><p><img src="/cenhelm.github.io/cenhelm.github.io/2022/01/25/mathorcup2022%E5%88%9D%E8%B5%9B/1.jpg" alt="原始特征"></p>
+<h2 id="数据描述"><a href="#数据描述" class="headerlink" title="数据描述"></a>数据描述</h2><p><strong></strong><br>数据做过脱敏处理，很多类别信息根本不知道值是什么含义</p>
 <h2 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h2><p><strong><img src="/cenhelm.github.io/2022/01/25/mathorcup2022%E5%88%9D%E8%B5%9B/2.png" class title="指标"></strong></p>
+<h2 id="预处理"><a href="#预处理" class="headerlink" title="预处理"></a>预处理</h2><ol>
+<li>主要是类别缺失值，我用了完全不同的值填充，也试了独热编码，不仅维度变大很多，而且效果不明显。</li>
+<li>本来也想按类别用众数填充的，没试不知道效果怎么样。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.loc[data[feature].isna() == True, feature] = data[feature].mode(dropna=false)[0]</span><br></pre></td></tr></table></figure></li>
+<li>标签平滑处理</li>
+</ol>
+<p><strong><img src="/cenhelm.github.io/2022/01/25/mathorcup2022%E5%88%9D%E8%B5%9B/3.png" class title="处理前"></strong><br><strong><img src="/cenhelm.github.io/2022/01/25/mathorcup2022%E5%88%9D%E8%B5%9B/4.png" class title="处理后"></strong><br>4. 用过独热编码后可能会产生命名不规范问题，把不规范的命名格式改一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data.rename(columns=lambda x: re.sub(&#x27;[^A-Za-z0-9_]+&#x27;, &#x27;&#x27;, x), inplace=True)</span><br></pre></td></tr></table></figure>
+<h2 id="特征构造"><a href="#特征构造" class="headerlink" title="特征构造"></a>特征构造</h2><p>二手车登记和注册的时间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">for i in [&#x27;tradeTime&#x27;, &#x27;registerDate&#x27;, &#x27;licenseDate&#x27;]:  </span><br><span class="line">  data[i] = pd.to_datetime(data[i])</span><br><span class="line">for i in [&#x27;registerDate&#x27;, &#x27;licenseDate&#x27;]:  </span><br><span class="line">  data[f&#x27;&#123;i&#125;_Dur&#x27;] = (data[&#x27;tradeTime&#x27;] - data[&#x27;registerDate&#x27;]).dt.days</span><br></pre></td></tr></table></figure>
+<p>各类别价格中位数，各类别中车的数量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">for i in [&#x27;brand&#x27;, &#x27;serial&#x27;, &#x27;model&#x27;, &#x27;color&#x27;, &#x27;cityId&#x27;, &#x27;carCode&#x27;, &#x27;country&#x27;, &#x27;maketype&#x27;,  </span><br><span class="line">          &#x27;gearbox&#x27;, &#x27;oiltype&#x27;]:  </span><br><span class="line">  data = pd.merge(data, data.groupby([i])[&#x27;newprice&#x27;].quantile(q=0.5).reset_index().rename(  </span><br><span class="line">        columns=&#123;&#x27;newprice&#x27;: f&#x27;newprice_Median_&#123;i&#125;&#x27;&#125;), on=i, how=&#x27;left&#x27;)    </span><br><span class="line">  data[f&#x27;&#123;i&#125;_count&#x27;] = data.groupby([i])[&#x27;id&#x27;].transform(&#x27;count&#x27;)</span><br></pre></td></tr></table></figure>
+<p>匿名特征不懂，直接梭哈</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">data[&#x27;V&#x27;] = data[&#x27;anonymousFeature12_x&#x27;] * data[&#x27;anonymousFeature12_y&#x27;] * data[&#x27;anonymousFeature12_z&#x27;]</span><br><span class="line">a_cols = [&#x27;anonymousFeature&#x27;+str(i) for i in [&#x27;1&#x27;, &#x27;2&#x27;, &#x27;3&#x27;, &#x27;5&#x27;, &#x27;6&#x27;, &#x27;8&#x27;, &#x27;9&#x27;, &#x27;10&#x27;, &#x27;14&#x27;]]  </span><br><span class="line">data[&#x27;a_mean&#x27;] = data[a_cols].mean(axis=1)  </span><br><span class="line">data[&#x27;a_max&#x27;] = data[a_cols].max(axis=1)  </span><br><span class="line">data[&#x27;a_min&#x27;] = data[a_cols].min(axis=1)  </span><br><span class="line">data[&#x27;a_std&#x27;] = data[a_cols].std(axis=1)  </span><br><span class="line">for col in [&#x27;a_mean&#x27;, &#x27;a_max&#x27;, &#x27;a_min&#x27;, &#x27;a_std&#x27;]:  </span><br><span class="line">  data[f&#x27;brand_&#123;col&#125;_mean&#x27;] = data.groupby([&#x27;brand&#x27;])[col].transform(&#x27;mean&#x27;)  </span><br><span class="line">  data[f&#x27;brand_&#123;col&#125;_max&#x27;] = data.groupby([&#x27;brand&#x27;])[col].transform(&#x27;max&#x27;)  </span><br><span class="line">  data[f&#x27;brand_&#123;col&#125;_min&#x27;] = data.groupby([&#x27;brand&#x27;])[col].transform(&#x27;min&#x27;)  </span><br><span class="line">  data[f&#x27;brand_&#123;col&#125;_std&#x27;] = data.groupby([&#x27;brand&#x27;])[col].transform(&#x27;std&#x27;)</span><br></pre></td></tr></table></figure>
+<h2 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h2><p>lgb，xgb，catb分别5折选验证集效果最好的前三取平均，最后分别赋予0.5，0.2，0.3权重，最后线下测试如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Mape=0.0721</span><br><span class="line">Accuracy_5=0.5095</span><br><span class="line">score=0.5932</span><br></pre></td></tr></table></figure>
+<h2 id="感想"><a href="#感想" class="headerlink" title="感想"></a>感想</h2><p>这比赛连个榜都没有，没有积极性，根本不知道线上效果怎么样。另外赛题太旧了，天池上就有类似的，虽然给的特征不完全一样，参考了一些思路，但提升实在有限。第一次打这种比赛，记录一下，没榜的以后不打了。</p>
 
         
     </section>
