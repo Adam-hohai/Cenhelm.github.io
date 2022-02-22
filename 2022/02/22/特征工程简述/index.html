@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+
+    
+
+    
+
+    <title>特征工程简述 | Cenehlm&#39;s blogs</title>
+    <meta name="author" content="Cenehlm" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="总结一些特征工程的方法。TBC参考：Datawhale零基础入门金融风控 Task3 特征工程1 缺失值填充1234#按照中位数填充数值型特征data_train[numerical_fea] = data_train[numerical_fea].fillna(data_train[numerical_fea].median())#按照众数填充类别型特征data_train[category_fea] = data_train[category_fea].fillna(data_train[c" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+    
+    <link rel="alternate" href="/cenhelm.github.io/atom.xml" title="Cenehlm&#39;s blogs" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cenhelm.github.io/images/favicon.ico">
+    
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'icomoon';
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml");
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
+             url("/cenhelm.github.io/fonts/icomoon.ttf?q628ml") format('truetype'),
+             url("/cenhelm.github.io/fonts/icomoon.woff?q628ml") format('woff'),
+             url("/cenhelm.github.io/fonts/icomoon.svg?q628ml#icomoon") format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    
+<link rel="stylesheet" href="/cenhelm.github.io/css/style.css">
+
+
+    <!--[if lt IE 9]><style type="text/css">.nav-inner {top:0;}.author-meta {position:static;top:0;}.search-form {height:36px;}</style><script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+
+    <main class="app">
+        <header id="header" class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">Cenehlm&#39;s blogs</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/cenhelm.github.io/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%97%A5%E5%B8%B8">
+                <span class="nav-text">日常</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%AF%94%E8%B5%9B">
+                <span class="nav-text">比赛</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%BC%BA%E5%A4%B1%E5%80%BC%E5%A1%AB%E5%85%85"><span class="toc-number">1.</span> <span class="toc-text">1 缺失值填充</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%97%B6%E9%97%B4%E6%A0%BC%E5%BC%8F%E5%A4%84%E7%90%86"><span class="toc-number">2.</span> <span class="toc-text">2 时间格式处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%B1%BB%E5%88%AB%E7%89%B9%E5%BE%81%E5%A4%84%E7%90%86"><span class="toc-number">3.</span> <span class="toc-text">3 类别特征处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BC%82%E5%B8%B8%E5%80%BC%E5%A4%84%E7%90%86"><span class="toc-number">4.</span> <span class="toc-text">4 异常值处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E6%95%B0%E6%8D%AE%E5%88%86%E6%A1%B6"><span class="toc-number">5.</span> <span class="toc-text">5 数据分桶</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-%E7%89%B9%E5%BE%81%E4%BA%A4%E4%BA%92"><span class="toc-number">6.</span> <span class="toc-text">6 特征交互</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E7%B1%BB%E5%88%AB%E7%89%B9%E5%BE%81%E7%BC%96%E7%A0%81"><span class="toc-number">7.</span> <span class="toc-text">7 类别特征编码</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content">
+            <div id="wrapper" class="wrapper" style="max-width: 800px">
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            特征工程简述
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/02/22/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-02-22T07:23:07.000Z" itemprop="datePublished">2022-02-22</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/ML/" rel="tag">ML</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>总结一些特征工程的方法。TBC</p>
+<span id="more"></span>
+<p>参考：<a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12586969.1002.9.3b306856ycdZ5u&postId=129321">Datawhale零基础入门金融风控 Task3 特征工程</a></p>
+<h3 id="1-缺失值填充"><a href="#1-缺失值填充" class="headerlink" title="1 缺失值填充"></a>1 缺失值填充</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#按照中位数填充数值型特征</span><br><span class="line">data_train[numerical_fea] = data_train[numerical_fea].fillna(data_train[numerical_fea].median())</span><br><span class="line">#按照众数填充类别型特征</span><br><span class="line">data_train[category_fea] = data_train[category_fea].fillna(data_train[category_fea].mode())</span><br></pre></td></tr></table></figure>
+<h3 id="2-时间格式处理"><a href="#2-时间格式处理" class="headerlink" title="2 时间格式处理"></a>2 时间格式处理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data[&#x27;issueDate&#x27;] = pd.to_datetime(data[&#x27;issueDate&#x27;],format=&#x27;%Y-%m-%d&#x27;)</span><br></pre></td></tr></table></figure>
+<h3 id="3-类别特征处理"><a href="#3-类别特征处理" class="headerlink" title="3 类别特征处理"></a>3 类别特征处理</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 自映射</span><br><span class="line">data[&#x27;grade&#x27;] = data[&#x27;grade&#x27;].map(&#123;&#x27;A&#x27;:1,&#x27;B&#x27;:2,&#x27;C&#x27;:3,&#x27;D&#x27;:4,&#x27;E&#x27;:5,&#x27;F&#x27;:6,&#x27;G&#x27;:7&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="4-异常值处理"><a href="#4-异常值处理" class="headerlink" title="4 异常值处理"></a>4 异常值处理</h3><p>==均方差==<br><strong>KS检测数据是否服从正态分布</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#导入scipy模块</span><br><span class="line">from scipy import stats</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">kstest方法：KS检验，参数分别是：待检验的数据，检验方法（这里设置成norm正态分布），均值与标准差</span><br><span class="line">结果返回两个值：statistic → D值，pvalue → P值</span><br><span class="line">p值大于0.05，为正态分布</span><br><span class="line">H0:样本符合  </span><br><span class="line">H1:样本不符合 </span><br><span class="line">如何p&gt;0.05接受H0 ,反之 </span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">u = s[&#x27;value&#x27;].mean()  # 计算均值</span><br><span class="line">std = s[&#x27;value&#x27;].std()  # 计算标准差</span><br><span class="line">stats.kstest(s[&#x27;value&#x27;], &#x27;norm&#x27;, (u, std))</span><br></pre></td></tr></table></figure>
+<p><strong>3标准差原则</strong><br>在统计学中，==如果一个数据分布近似正态==，那么大约 68% 的数据值会在均值的一个标准差范围内，大约 95% 会在两个标准差范围内，大约 99.7% 会在三个标准差范围内。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">def find_outliers_by_3segama(data,fea):</span><br><span class="line">    data_std = np.std(data[fea])</span><br><span class="line">    data_mean = np.mean(data[fea])</span><br><span class="line">    outliers_cut_off = data_std * 3</span><br><span class="line">    lower_rule = data_mean - outliers_cut_off</span><br><span class="line">    upper_rule = data_mean + outliers_cut_off</span><br><span class="line">    data[fea+&#x27;_outliers&#x27;] = data[fea].apply(lambda x:str(&#x27;异常值&#x27;) if x &gt; upper_rule or x &lt; lower_rule else &#x27;正常值&#x27;)</span><br><span class="line">    return data</span><br></pre></td></tr></table></figure>
+<p>==箱线图识别异常==<br>箱线图对数据没有限制。箱型图提供了识别异常值的一个标准，即异常值通常被定义为小于QL-1.5IQR或大于QU+1.5IQR的值。其中，QL称为下四分位数，表示全部观察值中有四分之一的数据取值比它小；QU称为上四分位数，表示全部观察值中有四分之一的数据取值比它大；IQR称为四分位数间距，是上四分位数QU与下四分位数QL之差，其间包含了全部观察值的一半。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># 定义箱线图识别异常值函数</span><br><span class="line">def box_plot(Ser):</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    Ser：进行异常值分析的DataFrame的某一列</span><br><span class="line">    &#x27;&#x27;&#x27;</span><br><span class="line">    Low = Ser.quantile(0.25)-1.5*(Ser.quantile(0.75)-Ser.quantile(0.25))</span><br><span class="line">    Up = Ser.quantile(0.75)+1.5*(Ser.quantile(0.75)-Ser.quantile(0.25))</span><br><span class="line">    index = (Ser&lt; Low) | (Ser&gt;Up)</span><br><span class="line">    Outlier = Ser.loc[index]</span><br><span class="line">    return(Outlier)</span><br><span class="line"></span><br><span class="line">box_plot(df[&#x27;counts&#x27;]).head(8)</span><br></pre></td></tr></table></figure>
+<h3 id="5-数据分桶"><a href="#5-数据分桶" class="headerlink" title="5 数据分桶"></a>5 数据分桶</h3><ul>
+<li>目的：从模型效果上来看，特征分箱主要是为了降低变量的复杂性，减少变量噪音对模型的影响，提高自变量和因变量的相关度。从而使模型更加稳定。</li>
+<li>作用：将连续变量离散化，将多状态的离散变量合并成少状态。</li>
+<li>原因：数据的特征内的值跨度可能比较大，对有监督和无监督中如k-均值聚类它使用欧氏距离作为相似度函数来测量数据点之间的相似度。都会造成大吃小的影响，其中一种解决方法是对计数值进行区间量化即数据分桶也叫做数据分箱，然后使用量化后的结果。</li>
+<li>优点：<ul>
+<li>处理缺失值：当数据源可能存在缺失值，此时可以把null单独作为一个分箱。</li>
+<li>处理异常值：当数据中存在离群点时，可以把其通过分箱离散化处理，从而提高变量的鲁棒性（抗干扰能力）。例如，age若出现200这种异常值，可分入“age &gt; 60”这个分箱里，排除影响。</li>
+<li>业务解释性：我们习惯于线性判断变量的作用，当x越来越大，y就越来越大。但实际x与y之间经常存在着非线性关系，此时可经过WOE变换。</li>
+</ul>
+</li>
+<li>原则：<ul>
+<li>最小分箱占比不低于5%</li>
+<li>箱内不能全部是好客户</li>
+<li>连续箱单调</li>
+</ul>
+</li>
+</ul>
+<p><strong>固定宽度分箱</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># 通过除法映射到间隔均匀的分箱中，每个分箱的取值范围都是loanAmnt/1000</span><br><span class="line">data[&#x27;loanAmnt_bin1&#x27;] = np.floor_divide(data[&#x27;loanAmnt&#x27;], 1000)</span><br><span class="line">## 通过对数函数映射到指数宽度分箱</span><br><span class="line">data[&#x27;loanAmnt_bin2&#x27;] = np.floor(np.log10(data[&#x27;loanAmnt&#x27;]))</span><br></pre></td></tr></table></figure>
+<p><strong>分位数分箱</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 从小到大分成数量相等的十等分</span><br><span class="line">data[&#x27;loanAmnt_bin3&#x27;] = pd.qcut(data[&#x27;loanAmnt&#x27;], 10, labels=False)</span><br></pre></td></tr></table></figure>
+<p><strong>卡方分箱等等</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pass</span><br></pre></td></tr></table></figure>
+<h3 id="6-特征交互"><a href="#6-特征交互" class="headerlink" title="6 特征交互"></a>6 特征交互</h3><p>==特征和标签进行交互==</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">for col in [&#x27;grade&#x27;, &#x27;subGrade&#x27;]: </span><br><span class="line">	# 分组后求标签平均值</span><br><span class="line">    temp_dict = data_train.groupby([col])[&#x27;isDefault&#x27;].agg([&#x27;mean&#x27;]).reset_index().rename(columns=&#123;&#x27;mean&#x27;: col + &#x27;_target_mean&#x27;&#125;)</span><br><span class="line">    # 索引换成分组特征值</span><br><span class="line">    temp_dict.index = temp_dict[col].values</span><br><span class="line">    # 转成字典，特征值对应分组标签平均值</span><br><span class="line">    temp_dict = temp_dict[col + &#x27;_target_mean&#x27;].to_dict()</span><br><span class="line">	# map映射值，注意测试集的映射值要用训练集的，避免穿越</span><br><span class="line">    data_train[col + &#x27;_target_mean&#x27;] = data_train[col].map(temp_dict)</span><br><span class="line">    data_test_a[col + &#x27;_target_mean&#x27;] = data_test_a[col].map(temp_dict)</span><br></pre></td></tr></table></figure>
+<p>==特征之间交互==</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 其他衍生变量 mean 和 std</span><br><span class="line">for df in [data_train, data_test_a]:</span><br><span class="line">    for item in [&#x27;n0&#x27;,&#x27;n1&#x27;,&#x27;n2&#x27;,&#x27;n2.1&#x27;,&#x27;n4&#x27;,&#x27;n5&#x27;,&#x27;n6&#x27;,&#x27;n7&#x27;,&#x27;n8&#x27;,&#x27;n9&#x27;,&#x27;n10&#x27;,&#x27;n11&#x27;,&#x27;n12&#x27;,&#x27;n13&#x27;,&#x27;n14&#x27;]:</span><br><span class="line">        df[&#x27;grade_to_mean_&#x27; + item] = df[&#x27;grade&#x27;] / df.groupby([item])[&#x27;grade&#x27;].transform(&#x27;mean&#x27;)</span><br><span class="line">        df[&#x27;grade_to_std_&#x27; + item] = df[&#x27;grade&#x27;] / df.groupby([item])[&#x27;grade&#x27;].transform(&#x27;std&#x27;)</span><br></pre></td></tr></table></figure>
+<h3 id="7-类别特征编码"><a href="#7-类别特征编码" class="headerlink" title="7 类别特征编码"></a>7 类别特征编码</h3><p>参考文章’类别变量编码‘</p>
+
+        
+    </section>
+</article>
+
+
+
+<a id="pagenext" href="/cenhelm.github.io/2022/02/22/EDA%E7%AE%80%E8%BF%B0/" class="article-next" title="EDA简述"><i class="icon-arrow-right"></i></a>
+
+
+
+
+
+            </div>
+        </div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d8d752057b9f8a189a988435e7d5c309";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://unpkg.com/jquery@1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle('normal', slideDone);
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp('normal', slideDone);
+            }, 3000);
+        }
+
+        function slideDone() {
+            if (nodes.navInner.css('display') !== 'none') {
+                nodes.navInner.css('display', '');
+            }
+        }
+
+        $(window).on('resize', function() {
+            if ($(this).width() > 960) {
+                nodes.navInner.css('display', '');
+            }
+        });
+    });
+    </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
+    
+
+<script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
+</html>
