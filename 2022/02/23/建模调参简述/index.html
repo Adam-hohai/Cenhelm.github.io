@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+
+    
+
+    
+
+    <title>建模调参简述 | Cenehlm&#39;s blogs</title>
+    <meta name="author" content="Cenehlm" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="总结一些模型训练的问题。TBC参考：Datawhale零基础入门金融风控 Task4 建模与调参压缩数据reduce_mem_usage 函数通过调整数据类型，帮助我们减少数据在内存中占用的空间12345678910111213141516171819202122232425262728293031323334353637# reduce_mem_usage 函数通过调整数据类型，帮助我们减少数据在内存中占用的空间def reduce_mem_usage(df):    &amp;quot;&amp;quot;" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+    
+    <link rel="alternate" href="/cenhelm.github.io/atom.xml" title="Cenehlm&#39;s blogs" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cenhelm.github.io/images/favicon.ico">
+    
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'icomoon';
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml");
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
+             url("/cenhelm.github.io/fonts/icomoon.ttf?q628ml") format('truetype'),
+             url("/cenhelm.github.io/fonts/icomoon.woff?q628ml") format('woff'),
+             url("/cenhelm.github.io/fonts/icomoon.svg?q628ml#icomoon") format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    
+<link rel="stylesheet" href="/cenhelm.github.io/css/style.css">
+
+
+    <!--[if lt IE 9]><style type="text/css">.nav-inner {top:0;}.author-meta {position:static;top:0;}.search-form {height:36px;}</style><script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+
+    <main class="app">
+        <header id="header" class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">Cenehlm&#39;s blogs</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/cenhelm.github.io/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%97%A5%E5%B8%B8">
+                <span class="nav-text">日常</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%AF%94%E8%B5%9B">
+                <span class="nav-text">比赛</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E6%95%B0%E6%8D%AE"><span class="toc-number">1.</span> <span class="toc-text">压缩数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BB%BA%E6%A8%A1"><span class="toc-number">2.</span> <span class="toc-text">建模</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%95%99%E5%87%BA%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">留出法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E9%AA%8C%E8%AF%81"><span class="toc-number">2.2.</span> <span class="toc-text">交叉验证</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E8%B0%83%E5%8F%82"><span class="toc-number">3.</span> <span class="toc-text">模型调参</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%AA%E5%BF%83%E8%B0%83%E5%8F%82"><span class="toc-number">3.1.</span> <span class="toc-text">贪心调参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E6%A0%BC%E6%90%9C%E7%B4%A2"><span class="toc-number">3.2.</span> <span class="toc-text">网格搜索</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E8%B0%83%E5%8F%82"><span class="toc-number">3.3.</span> <span class="toc-text">贝叶斯调参</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B%E4%BF%9D%E5%AD%98"><span class="toc-number">4.</span> <span class="toc-text">模型保存</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content">
+            <div id="wrapper" class="wrapper" style="max-width: 800px">
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            建模调参简述
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/02/23/%E5%BB%BA%E6%A8%A1%E8%B0%83%E5%8F%82%E7%AE%80%E8%BF%B0/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-02-23T07:08:39.000Z" itemprop="datePublished">2022-02-23</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/ML/" rel="tag">ML</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>总结一些模型训练的问题。TBC</p>
+<span id="more"></span>
+<p>参考：<a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12586969.1002.3.3b306856RlbOOd&postId=129346">Datawhale零基础入门金融风控 Task4 建模与调参</a></p>
+<h2 id="压缩数据"><a href="#压缩数据" class="headerlink" title="压缩数据"></a>压缩数据</h2><p>reduce_mem_usage 函数通过调整数据类型，帮助我们减少数据在内存中占用的空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"># reduce_mem_usage 函数通过调整数据类型，帮助我们减少数据在内存中占用的空间</span><br><span class="line">def reduce_mem_usage(df):</span><br><span class="line">    &quot;&quot;&quot; iterate through all the columns of a dataframe and modify the data type</span><br><span class="line">        to reduce memory usage.        </span><br><span class="line">    &quot;&quot;&quot;</span><br><span class="line">    start_mem = df.memory_usage().sum() </span><br><span class="line">    print(&#x27;Memory usage of dataframe is &#123;:.2f&#125; MB&#x27;.format(start_mem))</span><br><span class="line">    </span><br><span class="line">    for col in df.columns:</span><br><span class="line">        col_type = df[col].dtype</span><br><span class="line">        </span><br><span class="line">        if col_type != object:</span><br><span class="line">            c_min = df[col].min()</span><br><span class="line">            c_max = df[col].max()</span><br><span class="line">            if str(col_type)[:3] == &#x27;int&#x27;:</span><br><span class="line">                if c_min &gt; np.iinfo(np.int8).min and c_max &lt; np.iinfo(np.int8).max:</span><br><span class="line">                    df[col] = df[col].astype(np.int8)</span><br><span class="line">                elif c_min &gt; np.iinfo(np.int16).min and c_max &lt; np.iinfo(np.int16).max:</span><br><span class="line">                    df[col] = df[col].astype(np.int16)</span><br><span class="line">                elif c_min &gt; np.iinfo(np.int32).min and c_max &lt; np.iinfo(np.int32).max:</span><br><span class="line">                    df[col] = df[col].astype(np.int32)</span><br><span class="line">                elif c_min &gt; np.iinfo(np.int64).min and c_max &lt; np.iinfo(np.int64).max:</span><br><span class="line">                    df[col] = df[col].astype(np.int64)  </span><br><span class="line">            else:</span><br><span class="line">                if c_min &gt; np.finfo(np.float16).min and c_max &lt; np.finfo(np.float16).max:</span><br><span class="line">                    df[col] = df[col].astype(np.float16)</span><br><span class="line">                elif c_min &gt; np.finfo(np.float32).min and c_max &lt; np.finfo(np.float32).max:</span><br><span class="line">                    df[col] = df[col].astype(np.float32)</span><br><span class="line">                else:</span><br><span class="line">                    df[col] = df[col].astype(np.float64)</span><br><span class="line">        else:</span><br><span class="line">            df[col] = df[col].astype(&#x27;category&#x27;)</span><br><span class="line"></span><br><span class="line">    end_mem = df.memory_usage().sum() </span><br><span class="line">    print(&#x27;Memory usage after optimization is: &#123;:.2f&#125; MB&#x27;.format(end_mem))</span><br><span class="line">    print(&#x27;Decreased by &#123;:.1f&#125;%&#x27;.format(100 * (start_mem - end_mem) / start_mem))</span><br><span class="line">    return df</span><br></pre></td></tr></table></figure>
+<h2 id="建模"><a href="#建模" class="headerlink" title="建模"></a>建模</h2><p>基于树模型的算法特性，异常值、缺失值处理可以跳过</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.model_selection import KFold</span><br><span class="line"># 分离数据集，方便进行交叉验证</span><br><span class="line">X_train = data.loc[data[&#x27;sample&#x27;]==&#x27;train&#x27;, :].drop([&#x27;id&#x27;,&#x27;issueDate&#x27;,&#x27;isDefault&#x27;, &#x27;sample&#x27;], axis=1)</span><br><span class="line">X_test = data.loc[data[&#x27;sample&#x27;]==&#x27;test&#x27;, :].drop([&#x27;id&#x27;,&#x27;issueDate&#x27;,&#x27;isDefault&#x27;, &#x27;sample&#x27;], axis=1)</span><br><span class="line">y_train = data.loc[data[&#x27;sample&#x27;]==&#x27;train&#x27;, &#x27;isDefault&#x27;]</span><br><span class="line"></span><br><span class="line"># 5折交叉验证</span><br><span class="line">folds = 5</span><br><span class="line">seed = 2020</span><br><span class="line">kf = KFold(n_splits=folds, shuffle=True, random_state=seed)</span><br></pre></td></tr></table></figure>
+<h3 id="留出法"><a href="#留出法" class="headerlink" title="留出法"></a>留出法</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot;对训练集数据进行划分，分成训练集和验证集，并进行相应的操作&quot;&quot;&quot;</span><br><span class="line">from sklearn.model_selection import train_test_split</span><br><span class="line">import lightgbm as lgb</span><br><span class="line"># 数据集划分</span><br><span class="line">X_train_split, X_val, y_train_split, y_val = train_test_split(X_train, y_train, test_size=0.2)</span><br><span class="line">train_matrix = lgb.Dataset(X_train_split, label=y_train_split)</span><br><span class="line">valid_matrix = lgb.Dataset(X_val, label=y_val)</span><br><span class="line"></span><br><span class="line">params = &#123;</span><br><span class="line">            &#x27;boosting_type&#x27;: &#x27;gbdt&#x27;,</span><br><span class="line">            &#x27;objective&#x27;: &#x27;binary&#x27;,</span><br><span class="line">            &#x27;learning_rate&#x27;: 0.1,</span><br><span class="line">            &#x27;metric&#x27;: &#x27;auc&#x27;,</span><br><span class="line">            &#x27;min_child_weight&#x27;: 1e-3,</span><br><span class="line">            &#x27;num_leaves&#x27;: 31,</span><br><span class="line">            &#x27;max_depth&#x27;: -1,</span><br><span class="line">            &#x27;reg_lambda&#x27;: 0,</span><br><span class="line">            &#x27;reg_alpha&#x27;: 0,</span><br><span class="line">            &#x27;feature_fraction&#x27;: 1,</span><br><span class="line">            &#x27;bagging_fraction&#x27;: 1,</span><br><span class="line">            &#x27;bagging_freq&#x27;: 0,</span><br><span class="line">            &#x27;seed&#x27;: 2020,</span><br><span class="line">            &#x27;nthread&#x27;: 8,</span><br><span class="line">            &#x27;silent&#x27;: True,</span><br><span class="line">            &#x27;verbose&#x27;: -1,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;使用训练集数据进行模型训练&quot;&quot;&quot;</span><br><span class="line">model = lgb.train(params, train_set=train_matrix, valid_sets=valid_matrix, num_boost_round=20000, verbose_eval=1000, early_stopping_rounds=200)</span><br></pre></td></tr></table></figure>
+<h3 id="交叉验证"><a href="#交叉验证" class="headerlink" title="交叉验证"></a>交叉验证</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line">def cv_model(clf, train_x, train_y, test_x, clf_name):</span><br><span class="line">    folds = 5</span><br><span class="line">    seed = 2020</span><br><span class="line">    kf = KFold(n_splits=folds, shuffle=True, random_state=seed)</span><br><span class="line"></span><br><span class="line">    train = np.zeros(train_x.shape[0])</span><br><span class="line">    test = np.zeros(test_x.shape[0])</span><br><span class="line"></span><br><span class="line">    cv_scores = []</span><br><span class="line"></span><br><span class="line">    for i, (train_index, valid_index) in enumerate(kf.split(train_x, train_y)):</span><br><span class="line">        print(&#x27;************************************ &#123;&#125; ************************************&#x27;.format(str(i+1)))</span><br><span class="line">        trn_x, trn_y, val_x, val_y = train_x.iloc[train_index], train_y[train_index], train_x.iloc[valid_index], train_y[valid_index]</span><br><span class="line"></span><br><span class="line">        if clf_name == &quot;lgb&quot;:</span><br><span class="line">            train_matrix = clf.Dataset(trn_x, label=trn_y)</span><br><span class="line">            valid_matrix = clf.Dataset(val_x, label=val_y)</span><br><span class="line"></span><br><span class="line">            params = &#123;</span><br><span class="line">                &#x27;boosting_type&#x27;: &#x27;gbdt&#x27;,</span><br><span class="line">                &#x27;objective&#x27;: &#x27;binary&#x27;,</span><br><span class="line">                &#x27;metric&#x27;: &#x27;auc&#x27;,</span><br><span class="line">                &#x27;min_child_weight&#x27;: 5,</span><br><span class="line">                &#x27;num_leaves&#x27;: 2 ** 5,</span><br><span class="line">                &#x27;lambda_l2&#x27;: 10,</span><br><span class="line">                &#x27;feature_fraction&#x27;: 0.8,</span><br><span class="line">                &#x27;bagging_fraction&#x27;: 0.8,</span><br><span class="line">                &#x27;bagging_freq&#x27;: 4,</span><br><span class="line">                &#x27;learning_rate&#x27;: 0.1,</span><br><span class="line">                &#x27;seed&#x27;: 2020,</span><br><span class="line">                &#x27;nthread&#x27;: 28,</span><br><span class="line">                &#x27;n_jobs&#x27;:24,</span><br><span class="line">                &#x27;silent&#x27;: True,</span><br><span class="line">                &#x27;verbose&#x27;: -1,</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            model = clf.train(params, train_matrix, 50000, valid_sets=[train_matrix, valid_matrix], verbose_eval=200,early_stopping_rounds=200)</span><br><span class="line">            val_pred = model.predict(val_x, num_iteration=model.best_iteration)</span><br><span class="line">            test_pred = model.predict(test_x, num_iteration=model.best_iteration)</span><br><span class="line">            </span><br><span class="line">            # print(list(sorted(zip(features, model.feature_importance(&quot;gain&quot;)), key=lambda x: x[1], reverse=True))[:20])</span><br><span class="line">                </span><br><span class="line">        if clf_name == &quot;xgb&quot;:</span><br><span class="line">            train_matrix = clf.DMatrix(trn_x , label=trn_y)</span><br><span class="line">            valid_matrix = clf.DMatrix(val_x , label=val_y)</span><br><span class="line">            </span><br><span class="line">            params = &#123;&#x27;booster&#x27;: &#x27;gbtree&#x27;,</span><br><span class="line">                      &#x27;objective&#x27;: &#x27;binary:logistic&#x27;,</span><br><span class="line">                      &#x27;eval_metric&#x27;: &#x27;auc&#x27;,</span><br><span class="line">                      &#x27;gamma&#x27;: 1,</span><br><span class="line">                      &#x27;min_child_weight&#x27;: 1.5,</span><br><span class="line">                      &#x27;max_depth&#x27;: 5,</span><br><span class="line">                      &#x27;lambda&#x27;: 10,</span><br><span class="line">                      &#x27;subsample&#x27;: 0.7,</span><br><span class="line">                      &#x27;colsample_bytree&#x27;: 0.7,</span><br><span class="line">                      &#x27;colsample_bylevel&#x27;: 0.7,</span><br><span class="line">                      &#x27;eta&#x27;: 0.04,</span><br><span class="line">                      &#x27;tree_method&#x27;: &#x27;exact&#x27;,</span><br><span class="line">                      &#x27;seed&#x27;: 2020,</span><br><span class="line">                      &#x27;nthread&#x27;: 36,</span><br><span class="line">                      &quot;silent&quot;: True,</span><br><span class="line">                      &#125;</span><br><span class="line">            </span><br><span class="line">            watchlist = [(train_matrix, &#x27;train&#x27;),(valid_matrix, &#x27;eval&#x27;)]</span><br><span class="line">            </span><br><span class="line">            model = clf.train(params, train_matrix, num_boost_round=50000, evals=watchlist, verbose_eval=200, early_stopping_rounds=200)</span><br><span class="line">            val_pred  = model.predict(valid_matrix, ntree_limit=model.best_ntree_limit)</span><br><span class="line">            test_pred = model.predict(test_x , ntree_limit=model.best_ntree_limit)</span><br><span class="line">                 </span><br><span class="line">        if clf_name == &quot;cat&quot;:</span><br><span class="line">            params = &#123;&#x27;learning_rate&#x27;: 0.05, &#x27;depth&#x27;: 5, &#x27;l2_leaf_reg&#x27;: 10, &#x27;bootstrap_type&#x27;: &#x27;Bernoulli&#x27;,</span><br><span class="line">                      &#x27;od_type&#x27;: &#x27;Iter&#x27;, &#x27;od_wait&#x27;: 50, &#x27;random_seed&#x27;: 11, &#x27;allow_writing_files&#x27;: False&#125;</span><br><span class="line">            </span><br><span class="line">            model = clf(iterations=20000, **params)</span><br><span class="line">            model.fit(trn_x, trn_y, eval_set=(val_x, val_y),</span><br><span class="line">                      cat_features=[], use_best_model=True, verbose=500)</span><br><span class="line">            </span><br><span class="line">            val_pred  = model.predict(val_x)</span><br><span class="line">            test_pred = model.predict(test_x)</span><br><span class="line">            </span><br><span class="line">        train[valid_index] = val_pred</span><br><span class="line">        test = test_pred / kf.n_splits</span><br><span class="line">        cv_scores.append(roc_auc_score(val_y, val_pred))</span><br><span class="line">        </span><br><span class="line">        print(cv_scores)</span><br><span class="line">        </span><br><span class="line">    print(&quot;%s_scotrainre_list:&quot; % clf_name, cv_scores)</span><br><span class="line">    print(&quot;%s_score_mean:&quot; % clf_name, np.mean(cv_scores))</span><br><span class="line">    print(&quot;%s_score_std:&quot; % clf_name, np.std(cv_scores))</span><br><span class="line">    return train, test</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">def lgb_model(x_train, y_train, x_test):</span><br><span class="line">    lgb_train, lgb_test = cv_model(lgb, x_train, y_train, x_test, &quot;lgb&quot;)</span><br><span class="line">    return lgb_train, lgb_test</span><br><span class="line"></span><br><span class="line">def xgb_model(x_train, y_train, x_test):</span><br><span class="line">    xgb_train, xgb_test = cv_model(xgb, x_train, y_train, x_test, &quot;xgb&quot;)</span><br><span class="line">    return xgb_train, xgb_test</span><br><span class="line"></span><br><span class="line">def cat_model(x_train, y_train, x_test):</span><br><span class="line">    cat_train, cat_test = cv_model(CatBoostRegressor, x_train, y_train, x_test, &quot;cat&quot;)</span><br></pre></td></tr></table></figure>
+<h2 id="模型调参"><a href="#模型调参" class="headerlink" title="模型调参"></a>模型调参</h2><h3 id="贪心调参"><a href="#贪心调参" class="headerlink" title="贪心调参"></a>贪心调参</h3><p>先使用当前对模型影响最大的参数进行调优，达到当前参数下的模型最优化，再使用对模型影响次之的参数进行调优，如此下去，直到所有的参数调整完毕。<br>这个方法的缺点就是可能会调到局部最优而不是全局最优，但是只需要一步一步的进行参数最优化调试即可，容易理解。<br>需要注意的是在树模型中参数调整的顺序，也就是各个参数对模型的影响程度，这里列举一下日常调参过程中常用的参数和调参顺序：</p>
+<ul>
+<li>max_depth、num_leaves</li>
+<li>min_data_in_leaf、min_child_weight</li>
+<li>bagging_fraction、 feature_fraction、bagging_freq</li>
+<li>reg_lambda、reg_alpha</li>
+<li>min_split_gain<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.model_selection import cross_val_score</span><br><span class="line"></span><br><span class="line"># 调objective</span><br><span class="line">best_obj = dict()</span><br><span class="line">for obj in objective:</span><br><span class="line">    model = LGBMRegressor(objective=obj)</span><br><span class="line">    &quot;&quot;&quot;预测并计算roc的相关指标&quot;&quot;&quot;</span><br><span class="line">    score = cross_val_score(model, X_train, y_train, cv=5, scoring=&#x27;roc_auc&#x27;).mean()</span><br><span class="line">    best_obj[obj] = score</span><br><span class="line">    </span><br><span class="line"># num_leaves</span><br><span class="line">best_leaves = dict()</span><br><span class="line">for leaves in num_leaves:</span><br><span class="line">    model = LGBMRegressor(objective=min(best_obj.items(), key=lambda x:x[1])[0], num_leaves=leaves)</span><br><span class="line">    &quot;&quot;&quot;预测并计算roc的相关指标&quot;&quot;&quot;</span><br><span class="line">    score = cross_val_score(model, X_train, y_train, cv=5, scoring=&#x27;roc_auc&#x27;).mean()</span><br><span class="line">    best_leaves[leaves] = score</span><br><span class="line">    </span><br><span class="line"># max_depth</span><br><span class="line">best_depth = dict()</span><br><span class="line">for depth in max_depth:</span><br><span class="line">    model = LGBMRegressor(objective=min(best_obj.items(), key=lambda x:x[1])[0],</span><br><span class="line">                          num_leaves=min(best_leaves.items(), key=lambda x:x[1])[0],</span><br><span class="line">                          max_depth=depth)</span><br><span class="line">    &quot;&quot;&quot;预测并计算roc的相关指标&quot;&quot;&quot;</span><br><span class="line">    score = cross_val_score(model, X_train, y_train, cv=5, scoring=&#x27;roc_auc&#x27;).mean()</span><br><span class="line">    best_depth[depth] = score</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line">可依次将模型的参数通过上面的方式进行调整优化，并且通过可视化观察在每一个最优参数下模型的得分情况</span><br><span class="line">&quot;&quot;&quot;</span><br></pre></td></tr></table></figure>
+<h3 id="网格搜索"><a href="#网格搜索" class="headerlink" title="网格搜索"></a>网格搜索</h3>sklearn 提供GridSearchCV用于进行网格搜索，只需要把模型的参数输进去，就能给出最优化的结果和参数。相比起贪心调参，网格搜索的结果会更优，但是网格搜索只适合于小数据集，一旦数据的量级上去了，很难得出结果。由于时间较长不建议使用。<h3 id="贝叶斯调参"><a href="#贝叶斯调参" class="headerlink" title="贝叶斯调参"></a>贝叶斯调参</h3>贝叶斯调参的主要思想是：给定优化的目标函数(广义的函数，只需指定输入和输出即可，无需知道内部结构以及数学性质)，通过不断地添加样本点来更新目标函数的后验分布(高斯过程,直到后验分布基本贴合于真实分布）。简单的说，就是考虑了上一次参数的信息，从而更好的调整当前的参数。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.model_selection import cross_val_score</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;定义优化函数&quot;&quot;&quot;</span><br><span class="line">def rf_cv_lgb(num_leaves, max_depth, bagging_fraction, feature_fraction, bagging_freq, min_data_in_leaf, </span><br><span class="line">              min_child_weight, min_split_gain, reg_lambda, reg_alpha):</span><br><span class="line">    # 建立模型</span><br><span class="line">    model_lgb = lgb.LGBMClassifier(boosting_type=&#x27;gbdt&#x27;, bjective=&#x27;binary&#x27;, metric=&#x27;auc&#x27;,</span><br><span class="line">                                   learning_rate=0.1, n_estimators=5000,</span><br><span class="line">                                   num_leaves=int(num_leaves), max_depth=int(max_depth), </span><br><span class="line">                                   bagging_fraction=round(bagging_fraction, 2), feature_fraction=round(feature_fraction, 2),</span><br><span class="line">                                   bagging_freq=int(bagging_freq), min_data_in_leaf=int(min_data_in_leaf),</span><br><span class="line">                                   min_child_weight=min_child_weight, min_split_gain=min_split_gain,</span><br><span class="line">                                   reg_lambda=reg_lambda, reg_alpha=reg_alpha,</span><br><span class="line">                                   n_jobs= 8</span><br><span class="line">                                  )</span><br><span class="line">    </span><br><span class="line">    val = cross_val_score(model_lgb, X_train_split, y_train_split, cv=5, scoring=&#x27;roc_auc&#x27;).mean()</span><br><span class="line">    </span><br><span class="line">    return val</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">from bayes_opt import BayesianOptimization</span><br><span class="line">&quot;&quot;&quot;定义优化参数&quot;&quot;&quot;</span><br><span class="line">bayes_lgb = BayesianOptimization(</span><br><span class="line">    rf_cv_lgb, </span><br><span class="line">    &#123;</span><br><span class="line">        &#x27;num_leaves&#x27;:(10, 200),</span><br><span class="line">        &#x27;max_depth&#x27;:(3, 20),</span><br><span class="line">        &#x27;bagging_fraction&#x27;:(0.5, 1.0),</span><br><span class="line">        &#x27;feature_fraction&#x27;:(0.5, 1.0),</span><br><span class="line">        &#x27;bagging_freq&#x27;:(0, 100),</span><br><span class="line">        &#x27;min_data_in_leaf&#x27;:(10,100),</span><br><span class="line">        &#x27;min_child_weight&#x27;:(0, 10),</span><br><span class="line">        &#x27;min_split_gain&#x27;:(0.0, 1.0),</span><br><span class="line">        &#x27;reg_alpha&#x27;:(0.0, 10),</span><br><span class="line">        &#x27;reg_lambda&#x27;:(0.0, 10),</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;开始优化&quot;&quot;&quot;</span><br><span class="line">bayes_lgb.maximize(n_iter=10)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot;显示优化结果&quot;&quot;&quot;</span><br><span class="line">bayes_lgb.max</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot;调整一个较小的学习率，并通过cv函数确定当前最优的迭代次数&quot;&quot;&quot;</span><br><span class="line">base_params_lgb = &#123;</span><br><span class="line">                    &#x27;boosting_type&#x27;: &#x27;gbdt&#x27;,</span><br><span class="line">                    &#x27;objective&#x27;: &#x27;binary&#x27;,</span><br><span class="line">                    &#x27;metric&#x27;: &#x27;auc&#x27;,</span><br><span class="line">                    &#x27;learning_rate&#x27;: 0.01,</span><br><span class="line">                    &#x27;num_leaves&#x27;: 14,</span><br><span class="line">                    &#x27;max_depth&#x27;: 19,</span><br><span class="line">                    &#x27;min_data_in_leaf&#x27;: 37,</span><br><span class="line">                    &#x27;min_child_weight&#x27;:1.6,</span><br><span class="line">                    &#x27;bagging_fraction&#x27;: 0.98,</span><br><span class="line">                    &#x27;feature_fraction&#x27;: 0.69,</span><br><span class="line">                    &#x27;bagging_freq&#x27;: 96,</span><br><span class="line">                    &#x27;reg_lambda&#x27;: 9,</span><br><span class="line">                    &#x27;reg_alpha&#x27;: 7,</span><br><span class="line">                    &#x27;min_split_gain&#x27;: 0.4,</span><br><span class="line">                    &#x27;nthread&#x27;: 8,</span><br><span class="line">                    &#x27;seed&#x27;: 2020,</span><br><span class="line">                    &#x27;silent&#x27;: True,</span><br><span class="line">                    &#x27;verbose&#x27;: -1,</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">cv_result_lgb = lgb.cv(</span><br><span class="line">    train_set=train_matrix,</span><br><span class="line">    early_stopping_rounds=1000, </span><br><span class="line">    num_boost_round=20000,</span><br><span class="line">    nfold=5,</span><br><span class="line">    stratified=True,</span><br><span class="line">    shuffle=True,</span><br><span class="line">    params=base_params_lgb,</span><br><span class="line">    metrics=&#x27;auc&#x27;,</span><br><span class="line">    seed=0</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">print(&#x27;迭代次数&#123;&#125;&#x27;.format(len(cv_result_lgb[&#x27;auc-mean&#x27;])))</span><br><span class="line">print(&#x27;最终模型的AUC为&#123;&#125;&#x27;.format(max(cv_result_lgb[&#x27;auc-mean&#x27;])))</span><br></pre></td></tr></table></figure>
+<h2 id="模型保存"><a href="#模型保存" class="headerlink" title="模型保存"></a>模型保存</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&quot;&quot;&quot;保存模型到本地&quot;&quot;&quot;</span><br><span class="line"># 保存模型</span><br><span class="line">import pickle</span><br><span class="line">pickle.dump(final_model_lgb, open(&#x27;dataset/model_lgb_best.pkl&#x27;, &#x27;wb&#x27;))</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+        
+    </section>
+</article>
+
+
+
+<a id="pagenext" href="/cenhelm.github.io/2022/02/22/%E7%89%B9%E5%BE%81%E5%B7%A5%E7%A8%8B%E7%AE%80%E8%BF%B0/" class="article-next" title="特征工程简述"><i class="icon-arrow-right"></i></a>
+
+
+<a id="pageprev" href="/cenhelm.github.io/2022/02/23/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88%E7%AE%80%E8%BF%B0/" class="article-prev" title="模型融合简述"><i class="icon-arrow-left"></i></a>
+
+
+
+
+            </div>
+        </div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d8d752057b9f8a189a988435e7d5c309";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://unpkg.com/jquery@1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle('normal', slideDone);
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp('normal', slideDone);
+            }, 3000);
+        }
+
+        function slideDone() {
+            if (nodes.navInner.css('display') !== 'none') {
+                nodes.navInner.css('display', '');
+            }
+        }
+
+        $(window).on('resize', function() {
+            if ($(this).width() > 960) {
+                nodes.navInner.css('display', '');
+            }
+        });
+    });
+    </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
+    
+
+<script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
+</html>
