@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+
+    
+
+    
+
+    <title>可解释 | Cenehlm&#39;s blogs</title>
+    <meta name="author" content="Cenehlm" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="整理一些可解释相关论文及方法。TBC论文整理：# 深度学习模型可解释性研究综述# SAR图像目标识别的可解释性问题探讨# 人-无人车交互中的可解释性交互研究# 可解释性有序聚类方法及其应用分析# 可解释性有序聚类方法及其应用分析# 面向SAR图像解译的物理可解释深度学习技术进展与探讨LIME基于样本，向输入样本添加轻微扰动，并观察解释模型的输出变化，根据变化在原始输入中训练一个线性模型，并利用线性模型来局部近似带解释模型的预测，其中线性模型的权重系数表现为决策中改样本的每一维特征重要性知识蒸馏适" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+    
+    <link rel="alternate" href="/cenhelm.github.io/atom.xml" title="Cenehlm&#39;s blogs" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cenhelm.github.io/images/favicon.ico">
+    
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'icomoon';
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml");
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
+             url("/cenhelm.github.io/fonts/icomoon.ttf?q628ml") format('truetype'),
+             url("/cenhelm.github.io/fonts/icomoon.woff?q628ml") format('woff'),
+             url("/cenhelm.github.io/fonts/icomoon.svg?q628ml#icomoon") format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    
+<link rel="stylesheet" href="/cenhelm.github.io/css/style.css">
+
+
+    <!--[if lt IE 9]><style type="text/css">.nav-inner {top:0;}.author-meta {position:static;top:0;}.search-form {height:36px;}</style><script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+
+    <main class="app">
+        <header id="header" class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">Cenehlm&#39;s blogs</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/cenhelm.github.io/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%97%A5%E5%B8%B8">
+                <span class="nav-text">日常</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%AF%94%E8%B5%9B">
+                <span class="nav-text">比赛</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#LIME"><span class="toc-number">1.</span> <span class="toc-text">LIME</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E8%92%B8%E9%A6%8F"><span class="toc-number">2.</span> <span class="toc-text">知识蒸馏</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E7%BD%AE%E6%8D%A2"><span class="toc-number">3.</span> <span class="toc-text">特征置换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Shapley%E5%80%BC"><span class="toc-number">4.</span> <span class="toc-text">Shapley值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#influence-functions"><span class="toc-number">5.</span> <span class="toc-text">influence functions</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MMD-critic"><span class="toc-number">6.</span> <span class="toc-text">MMD-critic</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E5%BE%81%E6%89%B0%E5%8A%A8%E5%88%86%E6%9E%90Perturbation"><span class="toc-number">7.</span> <span class="toc-text">特征扰动分析Perturbation</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content">
+            <div id="wrapper" class="wrapper" style="max-width: 800px">
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            可解释
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/02/26/%E5%8F%AF%E8%A7%A3%E9%87%8A/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-02-26T07:00:23.000Z" itemprop="datePublished">2022-02-26</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/ML/" rel="tag">ML</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>整理一些可解释相关论文及方法。TBC</p>
+<span id="more"></span>
+<p>论文整理：<br><a target="_blank" rel="noopener" href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&dbname=CJFDLAST2021&filename=JSGG202108002&uniplatform=NZKPT&v=3Qinehu7XHJ51e2Q1Jx5fzOBa15-Mbh-uptayBN98LIzTe-xmBU5XxAS51wsbkms"># 深度学习模型可解释性研究综述</a><br><a target="_blank" rel="noopener" href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&dbname=CJFDLAST2020&filename=LDAX202003006&uniplatform=NZKPT&v=IgA0gHLZD_ksiBInw9l9PPVfLjEUtoe34kIuYBITNPYW47TH_1JR0VN_mIe0LbJB"># SAR图像目标识别的可解释性问题探讨</a><br><a target="_blank" rel="noopener" href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&dbname=CJFDLAST2020&filename=BZGC202018005&uniplatform=NZKPT&v=cq97cUWPWg7h8Jmit1lrj-BZksj4dQoaHqZe5tpw71w3h-SunfHvlOi9q0u9XEEY"># 人-无人车交互中的可解释性交互研究</a><br><a target="_blank" rel="noopener" href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CJFD&dbname=CJFDAUTODAY&filename=JSJY202202017&uniplatform=NZKPT&v=Squ7dtwzW281Plj5l3ULYzDIrxAMZKFj0ER3D2NsRYRYBEJ3l6aBS-RhPrcvqWvV"># 可解释性有序聚类方法及其应用分析</a><br><a target="_blank" rel="noopener" href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CAPJ&dbname=CAPJLAST&filename=JSJY20210728000&uniplatform=NZKPT&v=5lc3RO-EUUB_7ITUxrdNh2B6TbBHZ_hYE9G0Xu-qi7xANLNM_dyeG1CQWCITAUa1"># 可解释性有序聚类方法及其应用分析</a><br><a target="_blank" rel="noopener" href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CAPJ&dbname=CAPJLAST&filename=LDAX20220111001&uniplatform=NZKPT&v=J3WR8KUVzuaIVElQQ7b3zmkcrr3Vniu4LlRG48Ph4pyAVtdACH5ISRYGjiEwGrbh"># 面向SAR图像解译的物理可解释深度学习技术进展与探讨</a></p>
+<h3 id="LIME"><a href="#LIME" class="headerlink" title="LIME"></a>LIME</h3><p>基于样本，向输入样本添加轻微扰动，并观察解释模型的输出变化，根据变化在原始输入中训练一个线性模型，并利用线性模型来局部近似带解释模型的预测，其中线性模型的权重系数表现为决策中改样本的每一维特征重要性</p>
+<h3 id="知识蒸馏"><a href="#知识蒸馏" class="headerlink" title="知识蒸馏"></a>知识蒸馏</h3><p>适用神经网络，基本原理是用一个已训练的teacher网络，去教会一个student网络</p>
+<h3 id="特征置换"><a href="#特征置换" class="headerlink" title="特征置换"></a>特征置换</h3><p>模型无关解释，通过对给定特征值置换后模型预测精度的变化进行计算，可以确定给定特征对模型整体性能的重要性。更具体地说，给定一个具有n个特征的预先训练模型和一个测试集，该模型在测试集上的平均预测得分为p，即基线精度。我们将测试集上的特征值重新排序，并在修改后的数据集上计算模型的平均预测得分。每个特征迭代执行上述过程，最终可以分别得到n个特征的n个预测得分。然后，我们根据n个特征相对于基线精度p的得分下降程度来对其重要性进行排序。</p>
+<h3 id="Shapley值"><a href="#Shapley值" class="headerlink" title="Shapley值"></a>Shapley值</h3><p>SHAP框架</p>
+<h3 id="influence-functions"><a href="#influence-functions" class="headerlink" title="influence functions"></a>influence functions</h3><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.04730"># Understanding Black-box Predictions via Influence Functions</a><br>通过删除单样本后模型的预测误差判断该样本为有益样本还是有害样本，可以用来找到标签错误的样本，压缩数据集为对测试集影响最大的数据集，提高预测准确性，减少训练时间，减少内存需求。返回有害集harmfulness的排序和有益集的helpfulness排序。</p>
+<h3 id="MMD-critic"><a href="#MMD-critic" class="headerlink" title="MMD-critic"></a>MMD-critic</h3><p>MMD-critic算法找到指定数量的原型和批评，原型和批评都类似聚类中心，原型的分布更接近原始数据的分布，批评的分布则与数据分布不同。设立批评的目的是为了和原型一起提供见解，因为原型不能完全的代表所有数据点。<br>程序流程：</p>
+<ul>
+<li>使用MMD-critic算法查找原型和批评。</li>
+<li>像往常一样训练机器学习模型。</li>
+<li>用模型预测原型和批评的结果。</li>
+<li>分析预测：在哪些情况下算法是错的。通过找到的具有代表性的数据样本分析模型。<h3 id="特征扰动分析Perturbation"><a href="#特征扰动分析Perturbation" class="headerlink" title="特征扰动分析Perturbation"></a>特征扰动分析Perturbation</h3>主要解释深度图像模型</li>
+</ul>
+
+        
+    </section>
+</article>
+
+
+
+<a id="pagenext" href="/cenhelm.github.io/2022/02/23/%E6%A8%A1%E5%9E%8B%E8%9E%8D%E5%90%88%E7%AE%80%E8%BF%B0/" class="article-next" title="模型融合简述"><i class="icon-arrow-right"></i></a>
+
+
+
+
+
+            </div>
+        </div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d8d752057b9f8a189a988435e7d5c309";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://unpkg.com/jquery@1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle('normal', slideDone);
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp('normal', slideDone);
+            }, 3000);
+        }
+
+        function slideDone() {
+            if (nodes.navInner.css('display') !== 'none') {
+                nodes.navInner.css('display', '');
+            }
+        }
+
+        $(window).on('resize', function() {
+            if ($(this).width() > 960) {
+                nodes.navInner.css('display', '');
+            }
+        });
+    });
+    </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
+    
+
+<script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
+</html>
