@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+
+    
+
+    
+
+    <title>快来一起挖掘幸福感！ | Cenehlm&#39;s blogs</title>
+    <meta name="author" content="Cenehlm" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="天池练习赛，预测幸福值挖掘幸福值标签标签异常值（幸福感只有1到5整数）置为中数3，那么标签其实就5个值，感觉5分类比较好，但是比赛的评价指标是mse，很多开源方案最后也是用的回归。我也是选择了回归，并且对标签做了对数转换。模型做特征工程实在太耗时间就没做，看了别人方案个别特征使用分桶，感觉效果不是很好。模型就用了lgb+xgb+cat，lgb进行了贝叶斯调参，效果确实好点，xgb和cat没调参，最后stacking融合一下能提高大概0.005的样子，注意第二层元模型最好不要太复杂的模型，这次用的" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+    
+    <link rel="alternate" href="/cenhelm.github.io/atom.xml" title="Cenehlm&#39;s blogs" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cenhelm.github.io/images/favicon.ico">
+    
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'icomoon';
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml");
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
+             url("/cenhelm.github.io/fonts/icomoon.ttf?q628ml") format('truetype'),
+             url("/cenhelm.github.io/fonts/icomoon.woff?q628ml") format('woff'),
+             url("/cenhelm.github.io/fonts/icomoon.svg?q628ml#icomoon") format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    
+<link rel="stylesheet" href="/cenhelm.github.io/css/style.css">
+
+
+    <!--[if lt IE 9]><style type="text/css">.nav-inner {top:0;}.author-meta {position:static;top:0;}.search-form {height:36px;}</style><script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+
+    <main class="app">
+        <header id="header" class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">Cenehlm&#39;s blogs</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/cenhelm.github.io/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%97%A5%E5%B8%B8">
+                <span class="nav-text">日常</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%AF%94%E8%B5%9B">
+                <span class="nav-text">比赛</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%87%E7%AD%BE"><span class="toc-number">1.</span> <span class="toc-text">标签</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.</span> <span class="toc-text">模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content">
+            <div id="wrapper" class="wrapper" style="max-width: 800px">
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            快来一起挖掘幸福感！
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/03/02/%E5%BF%AB%E6%9D%A5%E4%B8%80%E8%B5%B7%E6%8C%96%E6%8E%98%E5%B9%B8%E7%A6%8F%E6%84%9F%EF%BC%81/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-03-02T03:30:48.000Z" itemprop="datePublished">2022-03-02</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/ML/" rel="tag">ML</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>天池练习赛，预测幸福值</p>
+<span id="more"></span>
+<p><a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/competition/entrance/231702/introduction">挖掘幸福值</a></p>
+<h2 id="标签"><a href="#标签" class="headerlink" title="标签"></a>标签</h2><p>标签异常值（幸福感只有1到5整数）置为中数3，那么标签其实就5个值，感觉5分类比较好，但是比赛的评价指标是mse，很多开源方案最后也是用的回归。我也是选择了回归，并且对标签做了对数转换。</p>
+<h2 id="模型"><a href="#模型" class="headerlink" title="模型"></a>模型</h2><p>做特征工程实在太耗时间就没做，看了别人方案个别特征使用分桶，感觉效果不是很好。模型就用了lgb+xgb+cat，lgb进行了贝叶斯调参，效果确实好点，xgb和cat没调参，最后stacking融合一下能提高大概0.005的样子，注意第二层元模型最好不要太复杂的模型，这次用的贝叶斯指标是上升的，试了下随机森林指标反而比融合前还低，所以第二层用复杂模型容易过拟合，stacking第一层的基模型追求的是准，不同于bagging，bagging第一层追求的是模型差别不同。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>最后排名826/8364，感觉我还是太菜了，又懒又菜，指标就差了0.01结果差了几百名名，懒的去试新特征，我觉得不做特征工程应该也还是可以追上去的，感觉遇到了瓶颈，准备看点书提升提升。</p>
+
+        
+    </section>
+</article>
+
+
+
+<a id="pagenext" href="/cenhelm.github.io/2022/02/28/%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%85%A5%E9%97%A8%E6%95%B0%E6%8D%AE%E6%8C%96%E6%8E%98-%E5%BF%83%E8%B7%B3%E4%BF%A1%E5%8F%B7%E5%88%86%E7%B1%BB%E9%A2%84%E6%B5%8B/" class="article-next" title="零基础入门数据挖掘-心跳信号分类预测"><i class="icon-arrow-right"></i></a>
+
+
+<a id="pageprev" href="/cenhelm.github.io/2022/03/02/%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97%E5%A1%AB%E5%85%85%E7%BC%BA%E5%A4%B1%E5%80%BC/" class="article-prev" title="随机森林填充缺失值"><i class="icon-arrow-left"></i></a>
+
+
+
+
+            </div>
+        </div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d8d752057b9f8a189a988435e7d5c309";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://unpkg.com/jquery@1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle('normal', slideDone);
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp('normal', slideDone);
+            }, 3000);
+        }
+
+        function slideDone() {
+            if (nodes.navInner.css('display') !== 'none') {
+                nodes.navInner.css('display', '');
+            }
+        }
+
+        $(window).on('resize', function() {
+            if ($(this).width() > 960) {
+                nodes.navInner.css('display', '');
+            }
+        });
+    });
+    </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
+    
+
+<script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
+</html>

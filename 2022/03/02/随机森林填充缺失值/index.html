@@ -7,10 +7,10 @@
 
     
 
-    <title>Cenehlm&#39;s blogs</title>
+    <title>随机森林填充缺失值 | Cenehlm&#39;s blogs</title>
     <meta name="author" content="Cenehlm" />
     <meta name="keywords" content="" />
-    <meta name="description" content="" />
+    <meta name="description" content="用随机森林填充缺失值幸福感预测1234567891011#  随机森林回归填充的思路就是从缺失值数目最少的开始填充from sklearn.impute import SimpleImputerfrom sklearn.ensemble import RandomForestRegressordatas_pre[&amp;#x27;inc_ability&amp;#x27;] = pd.to_numeric(datas_pre[&amp;#x27;inc_ability&amp;#x27;])y_full = data_tra" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 
@@ -52,7 +52,7 @@
 
     <nav id="nav-inner" class="nav-inner">
         
-            <a class="nav-item active" href="/cenhelm.github.io/">
+            <a class="nav-item" href="/cenhelm.github.io/">
                 <span class="nav-text">首页</span>
             </a>
         
@@ -80,6 +80,8 @@
     <div id="aside-inner" class="aside-inner">
         <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
 
+        
+        
         
         
 
@@ -130,21 +132,20 @@
 
         <div id="content" class="content">
             <div id="wrapper" class="wrapper" style="max-width: 800px">
-                
-    <article class="article" itemscope itemprop="blogPost">
+                <article class="article" itemscope itemprop="blogPost">
     
     <header class="article-header">
         
         <h1 itemprop="name">
-            <a href="/cenhelm.github.io/2022/01/28/%E5%85%B3%E4%BA%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%A0%91%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/">关于线性模型和树模型的数据处理的一些问题 持续更新</a>
+            随机森林填充缺失值
         </h1>
         
         <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/page/2/index.html">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/03/02/%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97%E5%A1%AB%E5%85%85%E7%BC%BA%E5%A4%B1%E5%80%BC/index.html">
     
     <i class="icon-calendar vm"></i>
     
-    <time class="vm" datetime="2022-01-28T09:38:29.000Z" itemprop="datePublished">2022-01-28</time>
+    <time class="vm" datetime="2022-03-02T11:57:42.000Z" itemprop="datePublished">2022-03-02</time>
 </a>
 
             
@@ -159,146 +160,23 @@
     
     <section class="article-body markdown-body">
         
-        <p>关于输入的数据是否需要符合正态分布，归一化等等。TBC.</p>
-        
-        <p class="article-more-link">
-            <a href="/cenhelm.github.io/2022/01/28/%E5%85%B3%E4%BA%8E%E7%BA%BF%E6%80%A7%E6%A8%A1%E5%9E%8B%E5%92%8C%E6%A0%91%E6%A8%A1%E5%9E%8B%E7%9A%84%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98-%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
-        
-    </section>
-</article>
+        <p>用随机森林填充缺失值</p>
+<span id="more"></span>
+<p><a target="_blank" rel="noopener" href="https://tianchi.aliyun.com/notebook-ai/detail?spm=5176.12586969.1002.105.52a149f4Qm6SlI&postId=102191">幸福感预测</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#  随机森林回归填充的思路就是从缺失值数目最少的开始填充</span><br><span class="line">from sklearn.impute import SimpleImputer</span><br><span class="line">from sklearn.ensemble import RandomForestRegressor</span><br><span class="line"></span><br><span class="line">datas_pre[&#x27;inc_ability&#x27;] = pd.to_numeric(datas_pre[&#x27;inc_ability&#x27;])</span><br><span class="line"></span><br><span class="line">y_full = data_train[&#x27;happiness&#x27;]</span><br><span class="line">data_pre_reg = datas_pre.copy()</span><br><span class="line">sort_index = np.argsort(data_pre_reg.isnull().sum(axis=0)).values</span><br><span class="line"></span><br><span class="line">data_pre_reg.columns = [x for x in range(len(data_pre_reg.columns))]</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">%%time</span><br><span class="line">for i in sort_index:</span><br><span class="line">    df = data_pre_reg</span><br><span class="line">    #  构建新标签</span><br><span class="line">    fillc = df.iloc[:,i]</span><br><span class="line">    #  构建新特征矩阵</span><br><span class="line">    df = pd.concat([df.iloc[:,df.columns != i],pd.DataFrame(y_full)],axis=1)</span><br><span class="line">    #  对于新的特征矩阵中，用0进行填充</span><br><span class="line">    imp_0 = SimpleImputer(missing_values=np.nan,strategy=&#x27;constant&#x27;,fill_value=0)</span><br><span class="line">    df_0 = pd.DataFrame(imp_0.fit_transform(df))</span><br><span class="line">    #  挑选出不缺失的标签</span><br><span class="line">    Ytrain = fillc[fillc.notnull()]</span><br><span class="line">    #  需要Ytest的index啊</span><br><span class="line">    Ytest = fillc[fillc.isnull()]</span><br><span class="line">    Xtrain = df_0.iloc[Ytrain.index,:]</span><br><span class="line">    Xtest = df_0.iloc[Ytest.index,:]</span><br><span class="line">    #  建立随机森林回归模型</span><br><span class="line">    rfc = RandomForestRegressor(n_estimators=100)</span><br><span class="line">    rfc = rfc.fit(Xtrain,Ytrain)</span><br><span class="line">    Ypredict = rfc.predict(Xtest)</span><br><span class="line">    </span><br><span class="line">    data_pre_reg.loc[data_pre_reg.iloc[:,i].isnull(),i] = Ypredict</span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lsx15521290250/article/details/114379847"># 用随机森林填充缺失值，直接上代码</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">data = pd.DataFrame(&#123;&#x27;id&#x27;:[1,np.nan,np.nan,np.nan,5,6],&#x27;name&#x27;:[22,np.nan,12,22,377,200],&#x27;math&#x27;:[90,np.nan,99,78,97,np.nan],&#x27;english&#x27;:[89,np.nan,80,94,94,90]&#125;)</span><br><span class="line">target = pd.DataFrame(&#123;&#x27;lable&#x27;:[1,0,1,1,1,0]&#125;)</span><br><span class="line">sortindex = data.isnull().sum().sort_values().index</span><br><span class="line">sortindex = list(sortindex)</span><br><span class="line">for i in sortindex:</span><br><span class="line">    #构建新特征和新标签</span><br><span class="line">    df = data</span><br><span class="line">    fillc = df.loc[:,i]</span><br><span class="line">    df = pd.concat([df.loc[:,df.columns != i],target],axis=1)</span><br><span class="line">                                            # target 标签</span><br><span class="line"></span><br><span class="line">    </span><br><span class="line">    #在新特征中，对有缺失值的列，用0填补 df_0：数组类型</span><br><span class="line">    df_0 =SimpleImputer(missing_values=np.nan,strategy=&#x27;constant&#x27;,fill_value=0).fit_transform(df)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">    # 找出训练集和测试集</span><br><span class="line">    # 找出当列非空的值</span><br><span class="line">    Ytrain = fillc[fillc.notnull()]</span><br><span class="line">    # 找出当列空的值</span><br><span class="line">    Ytest = fillc[fillc.isnull()]</span><br><span class="line">    # 根据非空值找出一整行数组</span><br><span class="line">    Xtrain = df_0[Ytrain.index,:]</span><br><span class="line">    # 根据空值找出一整行数组</span><br><span class="line">    Xtest = df_0[Ytest.index,:]</span><br><span class="line">  </span><br><span class="line">    #⽤随机森林回归来训练预测</span><br><span class="line">    rfc = RandomForestRegressor(n_estimators=50) </span><br><span class="line">    rfc = rfc.fit(Xtrain, Ytrain)</span><br><span class="line">    Ypredict = rfc.predict(Xtest)</span><br><span class="line">  </span><br><span class="line">    #将填补好的特征返回到我们的原始的特征中</span><br><span class="line">    data.loc[data.loc[:,i].isnull(),i] = Ypredict</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-    <article class="article" itemscope itemprop="blogPost">
-    
-    <header class="article-header">
-        
-        <h1 itemprop="name">
-            <a href="/cenhelm.github.io/2022/01/25/mathorcup2022%E5%88%9D%E8%B5%9B/">mathorcup2022初赛</a>
-        </h1>
-        
-        <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/page/2/index.html">
-    
-    <i class="icon-calendar vm"></i>
-    
-    <time class="vm" datetime="2022-01-25T03:56:29.000Z" itemprop="datePublished">2022-01-25</time>
-</a>
-
-            
-<div class="article-tag-list">
-    <i class="icon-tag vm"></i>
-    <a class="article-tag-link" href="/cenhelm.github.io/tags/%E6%AF%94%E8%B5%9B/" rel="tag">比赛</a>
-</div>
-
-
-        </div>
-    </header>
-    
-    <section class="article-body markdown-body">
-        
-        <p>初赛赛道A由58同城出题，主要做二手车交易价格预测</p>
-        
-        <p class="article-more-link">
-            <a href="/cenhelm.github.io/2022/01/25/mathorcup2022%E5%88%9D%E8%B5%9B/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
-        
-    </section>
-</article>
-
-
-    <article class="article" itemscope itemprop="blogPost">
-    
-    <header class="article-header">
-        
-        <h1 itemprop="name">
-            <a href="/cenhelm.github.io/2022/01/11/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/">关于数据集划分</a>
-        </h1>
-        
-        <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/page/2/index.html">
-    
-    <i class="icon-calendar vm"></i>
-    
-    <time class="vm" datetime="2022-01-11T06:07:41.513Z" itemprop="datePublished">2022-01-11</time>
-</a>
-
-            
-<div class="article-tag-list">
-    <i class="icon-tag vm"></i>
-    <a class="article-tag-link" href="/cenhelm.github.io/tags/ML/" rel="tag">ML</a>
-</div>
-
-
-        </div>
-    </header>
-    
-    <section class="article-body markdown-body">
-        
-        <p>主要关心一下分组划分和分层划分</p>
-        
-        <p class="article-more-link">
-            <a href="/cenhelm.github.io/2022/01/11/%E5%85%B3%E4%BA%8E%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
-        
-    </section>
-</article>
-
-
-    <article class="article" itemscope itemprop="blogPost">
-    
-    <header class="article-header">
-        
-        <h1 itemprop="name">
-            <a href="/cenhelm.github.io/2021/09/30/hello-world/">Hello World</a>
-        </h1>
-        
-        <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/page/2/index.html">
-    
-    <i class="icon-calendar vm"></i>
-    
-    <time class="vm" datetime="2021-09-30T10:04:57.708Z" itemprop="datePublished">2021-09-30</time>
-</a>
-
-            
-
-        </div>
-    </header>
-    
-    <section class="article-body markdown-body">
-        
-        <p>测试一下</p>
-        
-        <p class="article-more-link">
-            <a href="/cenhelm.github.io/2021/09/30/hello-world/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
-        
         
     </section>
 </article>
 
 
 
+<a id="pagenext" href="/cenhelm.github.io/2022/03/02/%E5%BF%AB%E6%9D%A5%E4%B8%80%E8%B5%B7%E6%8C%96%E6%8E%98%E5%B9%B8%E7%A6%8F%E6%84%9F%EF%BC%81/" class="article-next" title="快来一起挖掘幸福感！"><i class="icon-arrow-right"></i></a>
 
-<nav class="page-nav">
-    <a class="extend prev" rel="prev" href="/cenhelm.github.io/">&laquo; Prev</a><a class="page-number" href="/cenhelm.github.io/">1</a><span class="page-number current">2</span>
-</nav>
+
 
 
 
@@ -375,6 +253,33 @@
         });
     });
     </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
     
 
 <script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
