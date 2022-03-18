@@ -114,7 +114,7 @@
             
 <div class="article-tag-list">
     <i class="icon-tag vm"></i>
-    <a class="article-tag-link" href="/cenhelm.github.io/tags/ML/" rel="tag">ML</a>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/%E5%8F%AF%E8%A7%A3%E9%87%8A%E6%80%A7/" rel="tag">可解释性</a>
 </div>
 
 
@@ -129,15 +129,18 @@
 <h2 id="LIME"><a href="#LIME" class="headerlink" title="LIME"></a>LIME</h2><p>基于样本，向输入样本添加轻微扰动，并观察解释模型的输出变化，根据变化在原始输入中训练一个线性模型，并利用线性模型来局部近似带解释模型的预测，其中线性模型的权重系数表现为决策中改样本的每一维特征重要性</p>
 <h2 id="特征置换"><a href="#特征置换" class="headerlink" title="特征置换"></a>特征置换</h2><p>模型无关解释，通过对给定特征值置换后模型预测精度的变化进行计算，可以确定给定特征对模型整体性能的重要性。更具体地说，给定一个具有n个特征的预先训练模型和一个测试集，该模型在测试集上的平均预测得分为p，即基线精度。我们将测试集上的特征值重新排序，并在修改后的数据集上计算模型的平均预测得分。每个特征迭代执行上述过程，最终可以分别得到n个特征的n个预测得分。然后，我们根据n个特征相对于基线精度p的得分下降程度来对其重要性进行排序。</p>
 <h2 id="Shapley值"><a href="#Shapley值" class="headerlink" title="Shapley值"></a>Shapley值</h2><p>SHAP框架</p>
-<h2 id="influence-functions"><a href="#influence-functions" class="headerlink" title="influence functions"></a>influence functions</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.04730"># Understanding Black-box Predictions via Influence Functions</a><br>通过删除单样本后模型的预测误差判断该样本为有益样本还是有害样本，可以用来找到标签错误的样本，压缩数据集为对测试集影响最大的数据集，提高预测准确性，减少训练时间，减少内存需求。返回有害集harmfulness的排序和有益集的helpfulness排序。</p>
+<h2 id="influence-functions"><a href="#influence-functions" class="headerlink" title="influence functions"></a>influence functions</h2><p><a target="_blank" rel="noopener" href="https://arxiv.org/abs/1703.04730"># Understanding Black-box Predictions via Influence Functions</a><br>通过删除单样本后模型的预测误差判断该样本为有益样本还是有害样本，可以用来找到标签错误的样本，压缩数据集为对测试集影响最大的数据集，提高预测准确性，减少训练时间，减少内存需求。返回有害集harmfulness的排序和有益集的helpfulness排序。<br>适用条件：基于pytorch，必须神经网络，树模型用不了，输入必须为dataloader，dataframe不行，但是不仅限于图像。</p>
 <h2 id="MMD-critic"><a href="#MMD-critic" class="headerlink" title="MMD-critic"></a>MMD-critic</h2><p>MMD-critic算法找到指定数量的原型和批评，原型和批评都类似聚类中心，原型的分布更接近原始数据的分布，批评的分布则与数据分布不同。设立批评的目的是为了和原型一起提供见解，因为原型不能完全的代表所有数据点。<br>程序流程：</p>
 <ul>
 <li>使用MMD-critic算法查找原型和批评。</li>
 <li>像往常一样训练机器学习模型。</li>
 <li>用模型预测原型和批评的结果。</li>
-<li>分析预测：在哪些情况下算法是错的。通过找到的具有代表性的数据样本分析模型。<h2 id="知识蒸馏"><a href="#知识蒸馏" class="headerlink" title="知识蒸馏"></a>知识蒸馏</h2>适用神经网络，是一种基于迁移学习的模型压缩方法，该方法将复杂的教师模型学习到的知识迁移到学生模型上，在保证学生模型性能的前提下，参数大幅降低，进而实现对教师模型的全局解释。可有效压缩模型大小，广泛用于解释黑盒模型，但是该方法知识对复杂模型的全局近似，其解释未必真实反映模型的决策行为。<h2 id="特征扰动分析Perturbation"><a href="#特征扰动分析Perturbation" class="headerlink" title="特征扰动分析Perturbation"></a>特征扰动分析Perturbation</h2>主要解释深度图像模型<h2 id="激活最大化"><a href="#激活最大化" class="headerlink" title="激活最大化"></a>激活最大化</h2>寻找输入来返回最高置信度的输出，即找到是一个给定隐层单元的激活值最大的输入模式。现实中存在特定方向神经细胞，只会对特定方向活跃，所以如果某个图像输入使得这个神经元输出激励值最大，那么我们就有理由相信，这个神经元就是提取了和这个输入差不多的特征，所以我们寻找可以使这个神经元输入最大的那个x就是我们可以可视化并且有意义的表达这个神经元学习到的特征了。<h2 id="基于梯度解释方法"><a href="#基于梯度解释方法" class="headerlink" title="基于梯度解释方法"></a>基于梯度解释方法</h2><h3 id="反卷积和导向反向传播"><a href="#反卷积和导向反向传播" class="headerlink" title="反卷积和导向反向传播"></a>反卷积和导向反向传播</h3>可视化方法，适用于CNN。反卷积为卷积的逆过程，可以反映出卷积的过程但是不能返回卷积前的原始矩阵，导向反向传播对普通反向传播加了指导，限制了小于0的梯度的回传。<br>反卷积可视化后能大概看清轮廓到那时周围会存在大量噪声，导向反向传播基本没有噪声。</li>
+<li>分析预测：在哪些情况下算法是错的。通过找到的具有代表性的数据样本分析模型。</li>
 </ul>
-<p><strong><img src="/cenhelm.github.io/2022/02/26/%E5%8F%AF%E8%A7%A3%E9%87%8A/1.png" class title="可视化"></strong></p>
+<h2 id="知识蒸馏"><a href="#知识蒸馏" class="headerlink" title="知识蒸馏"></a>知识蒸馏</h2><p>适用神经网络，是一种基于迁移学习的模型压缩方法，该方法将复杂的教师模型学习到的知识迁移到学生模型上，在保证学生模型性能的前提下，参数大幅降低，进而实现对教师模型的全局解释。可有效压缩模型大小，广泛用于解释黑盒模型，但是该方法知识对复杂模型的全局近似，其解释未必真实反映模型的决策行为。</p>
+<h2 id="特征扰动分析Perturbation"><a href="#特征扰动分析Perturbation" class="headerlink" title="特征扰动分析Perturbation"></a>特征扰动分析Perturbation</h2><p>主要解释深度图像模型</p>
+<h2 id="激活最大化"><a href="#激活最大化" class="headerlink" title="激活最大化"></a>激活最大化</h2><p>寻找输入来返回最高置信度的输出，即找到是一个给定隐层单元的激活值最大的输入模式。现实中存在特定方向神经细胞，只会对特定方向活跃，所以如果某个图像输入使得这个神经元输出激励值最大，那么我们就有理由相信，这个神经元就是提取了和这个输入差不多的特征，所以我们寻找可以使这个神经元输入最大的那个x就是我们可以可视化并且有意义的表达这个神经元学习到的特征了。</p>
+<h2 id="基于梯度解释方法"><a href="#基于梯度解释方法" class="headerlink" title="基于梯度解释方法"></a>基于梯度解释方法</h2><h3 id="反卷积和导向反向传播"><a href="#反卷积和导向反向传播" class="headerlink" title="反卷积和导向反向传播"></a>反卷积和导向反向传播</h3><p>可视化方法，适用于CNN。反卷积为卷积的逆过程，可以反映出卷积的过程但是不能返回卷积前的原始矩阵，导向反向传播对普通反向传播加了指导，限制了小于0的梯度的回传。<br>反卷积可视化后能大概看清轮廓到那时周围会存在大量噪声，导向反向传播基本没有噪声。<br><strong><img src="/cenhelm.github.io/2022/02/26/%E5%8F%AF%E8%A7%A3%E9%87%8A/1.png" class title="可视化"></strong></p>
 <h3 id="积分梯度和平滑梯度"><a href="#积分梯度和平滑梯度" class="headerlink" title="积分梯度和平滑梯度"></a>积分梯度和平滑梯度</h3><p>朴素梯度通过梯度大小衡量模型对特征的敏感程度，积分梯度是对朴素梯度的改进，解决了梯度饱和时无法利用梯度信息反映特征重要性的问题。平滑梯度通过想输入图像添加噪声，然后利用反向传播的方法求解揉动图像的梯度，最后将求解得到的灵敏度图进行平均，并作为最后决策结果的解释。</p>
 <h2 id="基于类激活映射方法（CAM可视化）"><a href="#基于类激活映射方法（CAM可视化）" class="headerlink" title="基于类激活映射方法（CAM可视化）"></a>基于类激活映射方法（CAM可视化）</h2><p>热力图，适用于CNN，揭示卷积神经网络对图像的隐式关注，突出显示与预测类别相关的信息量最大的图像区域。<br><strong><img src="/cenhelm.github.io/2022/02/26/%E5%8F%AF%E8%A7%A3%E9%87%8A/2.png" class title="cam"></strong></p>
 <h2 id="因果可解释"><a href="#因果可解释" class="headerlink" title="因果可解释"></a>因果可解释</h2><h3 id="结构因果模型SCM"><a href="#结构因果模型SCM" class="headerlink" title="结构因果模型SCM"></a>结构因果模型SCM</h3><p>将DNN的结构建模为结构因果模型SCM，并通过执行因果推理来估计模型的每个组件对输出的因果影响。</p>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+
+    
+
+    
+
+    <title>AIX360简述 | Cenehlm&#39;s blogs</title>
+    <meta name="author" content="Cenehlm" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="一个开源工具包，包装了一些主流的可解释方法。项目地址local post-hoc explanationContrastive Explainers通过寻找PPs和PNs来维持原始分类，通过弹性范数正则化来确保解释的两部分PP和PN最小化。解释了为什么是P而不是Q的问题。我的理解是对单个样本增加最低限度的扰动，最后返回正确的分类和错误的分类应该是什么样的特征。可以处理图像和表格数据，但是输入模型必须是神经网络。LIME ExplainersshapGlobal post-hoc explanat" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+    
+    <link rel="alternate" href="/cenhelm.github.io/atom.xml" title="Cenehlm&#39;s blogs" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cenhelm.github.io/images/favicon.ico">
+    
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'icomoon';
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml");
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
+             url("/cenhelm.github.io/fonts/icomoon.ttf?q628ml") format('truetype'),
+             url("/cenhelm.github.io/fonts/icomoon.woff?q628ml") format('woff'),
+             url("/cenhelm.github.io/fonts/icomoon.svg?q628ml#icomoon") format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    
+<link rel="stylesheet" href="/cenhelm.github.io/css/style.css">
+
+
+    <!--[if lt IE 9]><style type="text/css">.nav-inner {top:0;}.author-meta {position:static;top:0;}.search-form {height:36px;}</style><script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+
+    <main class="app">
+        <header id="header" class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">Cenehlm&#39;s blogs</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/cenhelm.github.io/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%97%A5%E5%B8%B8">
+                <span class="nav-text">日常</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%AF%94%E8%B5%9B">
+                <span class="nav-text">比赛</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#local-post-hoc-explanation"><span class="toc-number">1.</span> <span class="toc-text">local post-hoc explanation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Contrastive-Explainers"><span class="toc-number">1.1.</span> <span class="toc-text">Contrastive Explainers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#LIME-Explainers"><span class="toc-number">1.2.</span> <span class="toc-text">LIME Explainers</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shap"><span class="toc-number">1.3.</span> <span class="toc-text">shap</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Global-post-hoc-explanation"><span class="toc-number">2.</span> <span class="toc-text">Global post-hoc explanation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ProfWeight-Explainer"><span class="toc-number">2.1.</span> <span class="toc-text">ProfWeight Explainer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#shap-1"><span class="toc-number">2.2.</span> <span class="toc-text">shap</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Directly-Interpretable-Supervised-Explainers"><span class="toc-number">3.</span> <span class="toc-text">Directly Interpretable Supervised Explainers</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Boolean-Rules-via-Column-Generation-Explainer"><span class="toc-number">3.1.</span> <span class="toc-text">Boolean Rules via Column Generation Explainer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generalized-Linear-Rule-Model-Explainer"><span class="toc-number">3.2.</span> <span class="toc-text">Generalized Linear Rule Model Explainer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Teaching-Explanations-for-Decisions-TED-Cartesian-Product-Explainer"><span class="toc-number">3.3.</span> <span class="toc-text">Teaching Explanations for Decisions (TED) Cartesian Product Explainer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Directly-Interpretable-Unsupervised-Explainers"><span class="toc-number">4.</span> <span class="toc-text">Directly Interpretable Unsupervised Explainers</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Disentangled-Inferred-Prior-Variational-Autoencoder-DIPVAE-Explainer"><span class="toc-number">4.1.</span> <span class="toc-text">Disentangled Inferred Prior Variational Autoencoder (DIPVAE) Explainer</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Protodash-Explainer"><span class="toc-number">4.2.</span> <span class="toc-text">Protodash Explainer</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8C%87%E6%A0%87"><span class="toc-number">5.</span> <span class="toc-text">指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Faithfulness"><span class="toc-number">5.1.</span> <span class="toc-text">Faithfulness</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Monotonicity"><span class="toc-number">5.2.</span> <span class="toc-text">Monotonicity</span></a></li></ol></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content">
+            <div id="wrapper" class="wrapper" style="max-width: 800px">
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            AIX360简述
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/03/10/AIX360%E7%AE%80%E8%BF%B0/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-03-10T08:10:22.000Z" itemprop="datePublished">2022-03-10</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/%E5%8F%AF%E8%A7%A3%E9%87%8A%E6%80%A7/" rel="tag">可解释性</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>一个开源工具包，包装了一些主流的可解释方法。</p>
+<span id="more"></span>
+<p><a target="_blank" rel="noopener" href="https://github.com/Trusted-AI/AIX360">项目地址</a></p>
+<h2 id="local-post-hoc-explanation"><a href="#local-post-hoc-explanation" class="headerlink" title="local post-hoc explanation"></a>local post-hoc explanation</h2><h3 id="Contrastive-Explainers"><a href="#Contrastive-Explainers" class="headerlink" title="Contrastive Explainers"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/lwbe.html#contrastive-explainers">Contrastive Explainers</a></h3><p>通过寻找PPs和PNs来维持原始分类，通过弹性范数正则化来确保解释的两部分PP和PN最小化。解释了为什么是P而不是Q的问题。我的理解是对单个样本增加最低限度的扰动，最后返回正确的分类和错误的分类应该是什么样的特征。<br>可以处理图像和表格数据，但是输入模型必须是神经网络。</p>
+<h3 id="LIME-Explainers"><a href="#LIME-Explainers" class="headerlink" title="LIME Explainers"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/lbbe.html#lime-explainers">LIME Explainers</a></h3><h3 id="shap"><a href="#shap" class="headerlink" title="shap"></a>shap</h3><h2 id="Global-post-hoc-explanation"><a href="#Global-post-hoc-explanation" class="headerlink" title="Global post-hoc explanation"></a>Global post-hoc explanation</h2><h3 id="ProfWeight-Explainer"><a href="#ProfWeight-Explainer" class="headerlink" title="ProfWeight Explainer"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/gwbe.html#profweight-explainer">ProfWeight Explainer</a></h3><p>从复杂模型的不同层的探测置信度计算样本权重，然后利用这些权重训练简单模型。对因果结构模型SCM的改进。</p>
+<h3 id="shap-1"><a href="#shap-1" class="headerlink" title="shap"></a>shap</h3><h2 id="Directly-Interpretable-Supervised-Explainers"><a href="#Directly-Interpretable-Supervised-Explainers" class="headerlink" title="Directly Interpretable Supervised Explainers"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/dise.html">Directly Interpretable Supervised Explainers</a></h2><h3 id="Boolean-Rules-via-Column-Generation-Explainer"><a href="#Boolean-Rules-via-Column-Generation-Explainer" class="headerlink" title="Boolean Rules via Column Generation Explainer"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/dise.html#boolean-rules-via-column-generation-explainer">Boolean Rules via Column Generation Explainer</a></h3><p>一种适用于二分类的可直接自解释的模型，结合列生成算法，通过析取范式和合取范式来学习布尔规则。解释形式为布尔规则。表格数据可以使用。</p>
+<h3 id="Generalized-Linear-Rule-Model-Explainer"><a href="#Generalized-Linear-Rule-Model-Explainer" class="headerlink" title="Generalized Linear Rule Model Explainer"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/dise.html#generalized-linear-rule-model-explainer">Generalized Linear Rule Model Explainer</a></h3><p>广义线性规则模型解释，提供两种可以直接解释的监督学习方法（多元线性回归和逻辑回归），返回判断规则和特征系数。</p>
+<h3 id="Teaching-Explanations-for-Decisions-TED-Cartesian-Product-Explainer"><a href="#Teaching-Explanations-for-Decisions-TED-Cartesian-Product-Explainer" class="headerlink" title="Teaching Explanations for Decisions (TED) Cartesian Product Explainer"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/dise.html#teaching-explanations-for-decisions-ted-cartesian-product-explainer">Teaching Explanations for Decisions (TED) Cartesian Product Explainer</a></h3><p>TED框架要求对训练数据进行扩充使得每个实例都包含一个解释，将领域专家解释映射到唯一整数后引入训练集进行训练。测试时不仅预测标签同时预测解释。</p>
+<h2 id="Directly-Interpretable-Unsupervised-Explainers"><a href="#Directly-Interpretable-Unsupervised-Explainers" class="headerlink" title="Directly Interpretable Unsupervised Explainers"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/die.html">Directly Interpretable Unsupervised Explainers</a></h2><h3 id="Disentangled-Inferred-Prior-Variational-Autoencoder-DIPVAE-Explainer"><a href="#Disentangled-Inferred-Prior-Variational-Autoencoder-DIPVAE-Explainer" class="headerlink" title="Disentangled Inferred Prior Variational Autoencoder (DIPVAE) Explainer"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/die.html#disentangled-inferred-prior-variational-autoencoder-dipvae-explainer">Disentangled Inferred Prior Variational Autoencoder (DIPVAE) Explainer</a></h3><h3 id="Protodash-Explainer"><a href="#Protodash-Explainer" class="headerlink" title="Protodash Explainer"></a><a target="_blank" rel="noopener" href="https://aix360.readthedocs.io/en/latest/die.html#protodash-explainer">Protodash Explainer</a></h3><h2 id="指标"><a href="#指标" class="headerlink" title="指标"></a>指标</h2><h3 id="Faithfulness"><a href="#Faithfulness" class="headerlink" title="Faithfulness"></a>Faithfulness</h3><p>忠诚度，评估特征重要性与特征对预测模型性能影响之间的相关度。特征越重要，影响应该更高，反之亦然，该指标通过逐步删除重要的每个特征来评估对性能的影响，然后计算特征重要度权重和对应模型性能的相关度。<br><strong><img src="/cenhelm.github.io/2022/03/10/AIX360%E7%AE%80%E8%BF%B0/1.png" class title="faithfulness"></strong></p>
+<h3 id="Monotonicity"><a href="#Monotonicity" class="headerlink" title="Monotonicity"></a>Monotonicity</h3><p>单调性，通过评估按照重要性递增的顺序添加特征后对模型性能的影响来衡量单个特征对模型性能的影响。随着特征的添加，模型的性能也应该相应的增加，从而导致模型性能单调增加。<br><strong><img src="/cenhelm.github.io/2022/03/10/AIX360%E7%AE%80%E8%BF%B0/2.png" class title="monotonicity"></strong></p>
+
+        
+    </section>
+</article>
+
+
+
+<a id="pagenext" href="/cenhelm.github.io/2022/03/02/%E9%9A%8F%E6%9C%BA%E6%A3%AE%E6%9E%97%E5%A1%AB%E5%85%85%E7%BC%BA%E5%A4%B1%E5%80%BC/" class="article-next" title="随机森林填充缺失值"><i class="icon-arrow-right"></i></a>
+
+
+<a id="pageprev" href="/cenhelm.github.io/2022/03/11/leetcode-%E6%95%B0%E7%BB%84/" class="article-prev" title="leetcode-数组"><i class="icon-arrow-left"></i></a>
+
+
+
+
+            </div>
+        </div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d8d752057b9f8a189a988435e7d5c309";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://unpkg.com/jquery@1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle('normal', slideDone);
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp('normal', slideDone);
+            }, 3000);
+        }
+
+        function slideDone() {
+            if (nodes.navInner.css('display') !== 'none') {
+                nodes.navInner.css('display', '');
+            }
+        }
+
+        $(window).on('resize', function() {
+            if ($(this).width() > 960) {
+                nodes.navInner.css('display', '');
+            }
+        });
+    });
+    </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
+    
+
+<script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
+</html>
