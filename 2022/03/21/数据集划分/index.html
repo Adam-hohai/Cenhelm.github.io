@@ -134,10 +134,10 @@
 <li>groupkfold可以分组划分，group参数决定了哪些分在一起，有点像是对id进行k折，如果将样本id传给group参数，可以确保相同id划分在一起</li>
 <li>StratifiedKFold分层k折，类似与train_test_split中stratify参数的作用<h2 id="自助法"><a href="#自助法" class="headerlink" title="自助法"></a>自助法</h2>效果最差不喜欢用<h1 id="时间序列划分数据集"><a href="#时间序列划分数据集" class="headerlink" title="时间序列划分数据集"></a>时间序列划分数据集</h1>时序数据差分要按照先后拆分，不能使用随机拆分<br>关于615项目使用随机划分的原因，该项目共有五十几批数据，每批数据都是时序数据，但是不同批次间是独立的，每个批次间没有时序关系，所以随机就行。<h2 id="hold-out"><a href="#hold-out" class="headerlink" title="hold out"></a>hold out</h2>按照时间先后，时间在前的80%作为训练集，后20%作为验证集。</li>
 </ol>
-<p><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/1.png" class width="1"></strong></p>
-<h2 id="cv"><a href="#cv" class="headerlink" title="cv"></a>cv</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h3><p><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/2.png" class width="2"></strong><br>可以参考sklearn接口：<a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html#examples-using-sklearn-model-selection-timeseriessplit">TimeSeriesSplit</a></p>
-<h3 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h3><p>适用于数据量比较大的时候<br><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/3.png" class width="3"></strong></p>
-<h3 id="方法3"><a href="#方法3" class="headerlink" title="方法3"></a>方法3</h3><p><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/4.png" class width="4"></strong><br>以上图为例，训练集分为三折，fold1是1月到10月的数据，fold2是2月到11月的数据，fold3是3月到12月的数据，fold1中1月到9月为训练数据，10月为验证数据。</p>
+<p><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/1.png" class></strong></p>
+<h2 id="cv"><a href="#cv" class="headerlink" title="cv"></a>cv</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h3><p><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/2.png" class></strong><br>可以参考sklearn接口：<a target="_blank" rel="noopener" href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html#examples-using-sklearn-model-selection-timeseriessplit">TimeSeriesSplit</a></p>
+<h3 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h3><p>适用于数据量比较大的时候<br><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/3.png" class></strong></p>
+<h3 id="方法3"><a href="#方法3" class="headerlink" title="方法3"></a>方法3</h3><p><strong><img src="/cenhelm.github.io/2022/03/21/%E6%95%B0%E6%8D%AE%E9%9B%86%E5%88%92%E5%88%86/4.png" class></strong><br>以上图为例，训练集分为三折，fold1是1月到10月的数据，fold2是2月到11月的数据，fold3是3月到12月的数据，fold1中1月到9月为训练数据，10月为验证数据。</p>
 
         
     </section>
