@@ -7,7 +7,7 @@
 
     
 
-    <title>Category: 测试 | Cenehlm&#39;s blogs</title>
+    <title>LIME explaination | Cenehlm&#39;s blogs</title>
     <meta name="author" content="Cenehlm" />
     <meta name="keywords" content="" />
     <meta name="description" content="" />
@@ -86,6 +86,8 @@
 
         
         
+        
+        
 
         
         <div class="author-meta">
@@ -134,21 +136,20 @@
 
         <div id="content" class="content">
             <div id="wrapper" class="wrapper" style="max-width: 800px">
-                
-    <article class="article" itemscope itemprop="blogPost">
+                <article class="article" itemscope itemprop="blogPost">
     
     <header class="article-header">
         
         <h1 itemprop="name">
-            <a href="/cenhelm.github.io/2021/09/30/hello-world/">Hello World</a>
+            LIME explaination
         </h1>
         
         <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/categories/%E6%B5%8B%E8%AF%95/index.html">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/04/05/LIME-explaination/index.html">
     
     <i class="icon-calendar vm"></i>
     
-    <time class="vm" datetime="2021-09-30T10:04:57.708Z" itemprop="datePublished">2021-09-30</time>
+    <time class="vm" datetime="2022-04-05T08:08:59.000Z" itemprop="datePublished">2022-04-05</time>
 </a>
 
             
@@ -158,19 +159,14 @@
     
     <section class="article-body markdown-body">
         
-        <p>测试一下</p>
-        
-        <p class="article-more-link">
-            <a href="/cenhelm.github.io/2021/09/30/hello-world/#more">
-                <span class="vm">阅读更多</span>
-                <i class="icon-arrow-double-right vm"></i>    
-            </a>
-        </p>
         
         
     </section>
 </article>
 
+
+
+<a id="pagenext" href="/cenhelm.github.io/2022/03/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91/" class="article-next" title="leetcode-二叉树"><i class="icon-arrow-right"></i></a>
 
 
 
@@ -249,6 +245,33 @@
         });
     });
     </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
     
 
 <script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
