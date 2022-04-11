@@ -7,10 +7,10 @@
 
     
 
-    <title>LIME explaination | Cenehlm&#39;s blogs</title>
+    <title>git问题汇总 | Cenehlm&#39;s blogs</title>
     <meta name="author" content="Cenehlm" />
     <meta name="keywords" content="" />
-    <meta name="description" content="最广泛使用的模型无关局部可解释方法之一：LIME参考论文：Why should i trust you?: Explaining the predictions of any classifierLIME（Local Interpretable Model-agnostic Explanations）思想解释任何分类或回归器以可信赖的方式，通过一个可解释的模型来局部近似。前提出现以下情况会使模型评估出错：数据泄露，训练集和测试集信息交叉数据集偏移，就是X和y不对齐可解释算法要求解释可以被人理解，" />
+    <meta name="description" content="git遇到的问题汇总我这两天真是被git搞怕了，昨天Ubuntu代码push不上去。今天windows好好的代码也push不上去，我真是吐了。keygen密钥生成，不然用不了ssh下载https://www.cnblogs.com/guobin-/p/15713847.html443 timeoutunable to access ‘https://github.com/Adam-hohai/leetcode.git/&amp;#39;: Failed to connect to github.com " />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
 
@@ -90,7 +90,7 @@
         
 
         
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#LIME%EF%BC%88Local-Interpretable-Model-agnostic-Explanations%EF%BC%89"><span class="toc-number">1.</span> <span class="toc-text">LIME（Local Interpretable Model-agnostic Explanations）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.</span> <span class="toc-text">思想</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90"><span class="toc-number">1.2.</span> <span class="toc-text">前提</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%AF%E8%A7%A3%E9%87%8A%E7%AE%97%E6%B3%95%E8%A6%81%E6%B1%82"><span class="toc-number">1.3.</span> <span class="toc-text">可解释算法要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%97%E6%B3%95%E6%B5%81%E7%A8%8B"><span class="toc-number">1.4.</span> <span class="toc-text">算法流程</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#keygen"><span class="toc-number">1.</span> <span class="toc-text">keygen</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#443-timeout"><span class="toc-number">2.</span> <span class="toc-text">443 timeout</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#port%E5%87%BA%E9%94%99"><span class="toc-number">3.</span> <span class="toc-text">port出错</span></a></li></ol>
         
     </div>
 </aside>
@@ -104,21 +104,21 @@
     <header class="article-header">
         
         <h1 itemprop="name">
-            LIME explaination
+            git问题汇总
         </h1>
         
         <div class="article-meta clearfix">
-            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/04/05/LIME-explaination/index.html">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/04/11/git%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/index.html">
     
     <i class="icon-calendar vm"></i>
     
-    <time class="vm" datetime="2022-04-05T08:08:59.000Z" itemprop="datePublished">2022-04-05</time>
+    <time class="vm" datetime="2022-04-11T02:57:58.000Z" itemprop="datePublished">2022-04-11</time>
 </a>
 
             
 <div class="article-tag-list">
     <i class="icon-tag vm"></i>
-    <a class="article-tag-link" href="/cenhelm.github.io/tags/%E5%8F%AF%E8%A7%A3%E9%87%8A/" rel="tag">可解释</a>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/git/" rel="tag">git</a>
 </div>
 
 
@@ -127,26 +127,12 @@
     
     <section class="article-body markdown-body">
         
-        <p>最广泛使用的模型无关局部可解释方法之一：LIME</p>
+        <p>git遇到的问题汇总</p>
 <span id="more"></span>
-<p>参考论文：Why should i trust you?: Explaining the predictions of any classifier</p>
-<h1 id="LIME（Local-Interpretable-Model-agnostic-Explanations）"><a href="#LIME（Local-Interpretable-Model-agnostic-Explanations）" class="headerlink" title="LIME（Local Interpretable Model-agnostic Explanations）"></a>LIME（Local Interpretable Model-agnostic Explanations）</h1><h2 id="思想"><a href="#思想" class="headerlink" title="思想"></a>思想</h2><p>解释任何分类或回归器以可信赖的方式，通过一个可解释的模型来局部近似。</p>
-<h2 id="前提"><a href="#前提" class="headerlink" title="前提"></a>前提</h2><p>出现以下情况会使模型评估出错：</p>
-<ul>
-<li>数据泄露，训练集和测试集信息交叉</li>
-<li>数据集偏移，就是X和y不对齐<h2 id="可解释算法要求"><a href="#可解释算法要求" class="headerlink" title="可解释算法要求"></a>可解释算法要求</h2></li>
-<li>解释可以被人理解，判断</li>
-<li>局部保真性，一个解释有意义必须至少局部可信赖，必须符合模型再感兴趣实例周围邻居的行为方式。局部保真性不能说明全局保真性，全局重要的特征不一定局部重要，反之亦然。<h2 id="算法流程"><a href="#算法流程" class="headerlink" title="算法流程"></a>算法流程</h2>LIME给出的解释如下：</li>
-</ul>
-<p><strong><img src="/cenhelm.github.io/2022/04/05/LIME-explaination/1.png" class></strong><br><strong><img src="/cenhelm.github.io/2022/04/05/LIME-explaination/2.png" class></strong></p>
-<ol>
-<li>保真度函数，衡量g局部拟合f的不信赖程度</li>
-<li>f，x属于特定类的可能性</li>
-<li>g，用来局部拟合的可解释模型，一般是k-lasso</li>
-<li>感兴趣实例和人工样本距离度量</li>
-</ol>
-<p><strong><img src="/cenhelm.github.io/2022/04/05/LIME-explaination/3.png" class></strong><br>对感兴趣实例进行扰动，z就是人工生成的扰动样本，这个函数衡量扰动和感兴趣实例的距离，对于文本使余弦距离，对于图像使L2距离。<br><strong><img src="/cenhelm.github.io/2022/04/05/LIME-explaination/4.png" class></strong><br>说真的，我没怎么看懂z和z’的区别，z’为简化特征，由01二进制数构成，长度对应原始特征长度，当z’中该特征置为1表示使用原始数据的特征值，当置为0时使用随即置换对数据进行替换（这种置换的方法有一些问题，当特征之间不是独立的，而是有关联的，那么生成的数据可能是实际不存在的）。还可以看看这篇文章：<a target="_blank" rel="noopener" href="https://blog.csdn.net/iqdutao/article/details/108397239">https://blog.csdn.net/iqdutao/article/details/108397239</a></p>
-<p>注意：NN跑shap和lime，tersorflow==1.15.0 keras==2.3.1</p>
+<p>我这两天真是被git搞怕了，昨天Ubuntu代码push不上去。今天windows好好的代码也push不上去，我真是吐了。</p>
+<h2 id="keygen"><a href="#keygen" class="headerlink" title="keygen"></a>keygen</h2><p>密钥生成，不然用不了ssh下载<br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/guobin-/p/15713847.html">https://www.cnblogs.com/guobin-/p/15713847.html</a></p>
+<h2 id="443-timeout"><a href="#443-timeout" class="headerlink" title="443 timeout"></a>443 timeout</h2><p>unable to access ‘<a target="_blank" rel="noopener" href="https://github.com/Adam-hohai/leetcode.git/&#39;">https://github.com/Adam-hohai/leetcode.git/&#39;</a>: Failed to connect to github.com port 443: Timed out<br>应该是dns解析错误，找最新的github的ip，因为有事会换<br><a target="_blank" rel="noopener" href="https://ipaddress.com/website/github.com">https://ipaddress.com/website/github.com</a></p>
+<h2 id="port出错"><a href="#port出错" class="headerlink" title="port出错"></a>port出错</h2><p>Failed to connect to 127.0.0.1 port 1080: Connection refused<br>昨天用ubuntu时，为了防止端口冲突把我windows的proxy端口换了没改回去(直接改clash里面的)<br>git config –global http.proxy <a href="http://127.0.0.1:当前proxy端口号">http://127.0.0.1:当前proxy端口号</a><br>git config –global https.proxy <a href="http://127.0.0.1:当前proxy端口号">http://127.0.0.1:当前proxy端口号</a></p>
 
         
     </section>
@@ -154,10 +140,8 @@
 
 
 
-<a id="pagenext" href="/cenhelm.github.io/2022/03/30/leetcode-%E4%BA%8C%E5%8F%89%E6%A0%91/" class="article-next" title="leetcode-二叉树"><i class="icon-arrow-right"></i></a>
+<a id="pagenext" href="/cenhelm.github.io/2022/04/05/LIME-explaination/" class="article-next" title="LIME explaination"><i class="icon-arrow-right"></i></a>
 
-
-<a id="pageprev" href="/cenhelm.github.io/2022/04/11/git%E9%97%AE%E9%A2%98%E6%B1%87%E6%80%BB/" class="article-prev" title="git问题汇总"><i class="icon-arrow-left"></i></a>
 
 
 
