@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+
+    
+
+    
+
+    <title>XAI with code | Cenehlm&#39;s blogs</title>
+    <meta name="author" content="Cenehlm" />
+    <meta name="keywords" content="" />
+    <meta name="description" content="Explainable artificial intelligence with code 88篇论文汇总Axiomatic Attribution for Deep Networks2017 2557integrated gradients，将深度网络的预测归因于其输入。GNNExplainer: Generating Explanations for Graph Neural Networks2019 316为图神经网络生成解释，利用图NN的递归邻域聚合方案去辨别重要的图路径，突出显示沿着路" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no" />
+
+    
+    <link rel="alternate" href="/cenhelm.github.io/atom.xml" title="Cenehlm&#39;s blogs" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/cenhelm.github.io/images/favicon.ico">
+    
+
+    <style type="text/css">
+    @font-face {
+        font-family: 'icomoon';
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml");
+        src: url("/cenhelm.github.io/fonts/icomoon.eot?q628ml#iefix") format('embedded-opentype'),
+             url("/cenhelm.github.io/fonts/icomoon.ttf?q628ml") format('truetype'),
+             url("/cenhelm.github.io/fonts/icomoon.woff?q628ml") format('woff'),
+             url("/cenhelm.github.io/fonts/icomoon.svg?q628ml#icomoon") format('svg');
+        font-weight: normal;
+        font-style: normal;
+    }
+    </style>
+    
+<link rel="stylesheet" href="/cenhelm.github.io/css/style.css">
+
+
+    <!--[if lt IE 9]><style type="text/css">.nav-inner {top:0;}.author-meta {position:static;top:0;}.search-form {height:36px;}</style><script type="text/javascript" src="https://unpkg.com/html5shiv@3.7.3/dist/html5shiv.min.js"></script><![endif]-->
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+
+    <main class="app">
+        <header id="header" class="header clearfix">
+    <div id="nav" class="nav">
+    <div class="nav-mobile">
+        <button id="open-panel" class="open-panel nav-mobile-item"><i class="icon-documents"></i></button>
+        <h1 class="nav-mobile-title nav-mobile-item">Cenehlm&#39;s blogs</h1>
+        <button id="open-menus" class="open-panel nav-mobile-item"><i class="icon-library"></i></button>
+    </div>
+
+    <nav id="nav-inner" class="nav-inner">
+        
+            <a class="nav-item" href="/cenhelm.github.io/">
+                <span class="nav-text">首页</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%97%A5%E5%B8%B8">
+                <span class="nav-text">日常</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E6%AF%94%E8%B5%9B">
+                <span class="nav-text">比赛</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/categories/%E7%A7%91%E7%A0%94">
+                <span class="nav-text">科研</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/archives">
+                <span class="nav-text">归档</span>
+            </a>
+        
+            <a class="nav-item" href="/cenhelm.github.io/about">
+                <span class="nav-text">关于</span>
+            </a>
+        
+    </nav>
+</div>
+
+    <aside id="aside" class="aside">
+    <div id="aside-mask" class="aside-mask"></div>
+    <div id="aside-inner" class="aside-inner">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit"><i class="icon-search-stroke"></i></button><input type="hidden" name="sitesearch" value="https://adam-hohai.github.io/cenhelm.github.io"></form>
+
+        
+        
+        
+        
+
+        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Axiomatic-Attribution-for-Deep-Networks"><span class="toc-number">1.</span> <span class="toc-text">Axiomatic Attribution for Deep Networks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GNNExplainer-Generating-Explanations-for-Graph-Neural-Networks"><span class="toc-number">2.</span> <span class="toc-text">GNNExplainer: Generating Explanations for Graph Neural Networks</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Proposed-Guidelines-for-the-Responsible-Use-of-Explainable-Machine-Learning"><span class="toc-number">3.</span> <span class="toc-text">Proposed Guidelines for the Responsible Use of Explainable Machine Learning</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Software-for-Dataset-wide-XAI-From-Local-Explanations-to-Global-Insights-with-Zennit-CoRelAy-and-ViRelAy"><span class="toc-number">4.</span> <span class="toc-text">Software for Dataset-wide XAI: From Local Explanations to Global Insights with Zennit, CoRelAy, and ViRelAy</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SoPa-Bridging-CNNs-RNNs-and-Weighted-Finite-State-Machines"><span class="toc-number">5.</span> <span class="toc-text">SoPa: Bridging CNNs, RNNs, and Weighted Finite-State Machines</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#DO-NOT-TRUST-ADDITIVE-EXPLANATIONS"><span class="toc-number">6.</span> <span class="toc-text">DO NOT TRUST ADDITIVE EXPLANATIONS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#On-the-Explanation-of-Machine-Learning-Predictions-in-Clinical-Gait-Analysis"><span class="toc-number">7.</span> <span class="toc-text">On the Explanation of Machine Learning Predictions in Clinical Gait Analysis</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#EUCA-the-End-User-Centered-Explainable-AI-Framework"><span class="toc-number">8.</span> <span class="toc-text">EUCA: the End-User-Centered Explainable AI Framework</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Towards-Rigorous-Interpretations-a-Formalisation-of-Feature-Attribution"><span class="toc-number">9.</span> <span class="toc-text">Towards Rigorous Interpretations: a Formalisation of Feature Attribution</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Entropy-based-Logic-Explanations-of-Neural-Networks%E5%9F%BA%E4%BA%8E%E7%86%B5%E7%9A%84%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E9%80%BB%E8%BE%91%E8%A7%A3%E9%87%8A"><span class="toc-number">10.</span> <span class="toc-text">Entropy-based Logic Explanations of Neural Networks基于熵的神经网络逻辑解释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Quantitative-Evaluation-of-Explainable-Graph-Neural-Networks-for-Molecular-Property-Prediction%E5%88%86%E5%AD%90%E6%80%A7%E8%B4%A8%E9%A2%84%E6%B5%8B%E4%B8%AD%E5%8F%AF%E8%A7%A3%E9%87%8A%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E7%9A%84%E5%AE%9A%E9%87%8F%E8%AF%84%E4%BB%B7"><span class="toc-number">11.</span> <span class="toc-text">Quantitative Evaluation of Explainable Graph Neural Networks for Molecular Property Prediction分子性质预测中可解释图神经网络的定量评价</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Explaining-deep-learning-models-for-spoofing-and-deepfake-detection-with-SHapley-Additive-exPlanations"><span class="toc-number">12.</span> <span class="toc-text">Explaining deep learning models for spoofing and deepfake detection with SHapley Additive exPlanations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#GAM-e-changer-or-not-An-evaluation-of-interpretable-machine-learning-models-based-on-additive-model-constraints"><span class="toc-number">13.</span> <span class="toc-text"># GAM(e) changer or not? An evaluation of interpretable machine learning models based on additive model constraints</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Visual-Interpretability-for-Deep-Learning-a-Survey"><span class="toc-number">14.</span> <span class="toc-text"># Visual Interpretability for Deep Learning: a Survey</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Meaningful-Data-Sampling-for-a-Faithful-Local-Explanation-Method"><span class="toc-number">15.</span> <span class="toc-text"># Meaningful Data Sampling for a Faithful Local Explanation Method</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Explainable-Artificial-Intelligence-XAI-Concepts-Taxonomies-Opportunities-and-Challenges-toward-Responsible-AI"><span class="toc-number">16.</span> <span class="toc-text"># Explainable Artificial Intelligence (XAI): Concepts, Taxonomies, Opportunities and Challenges toward Responsible AI</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Towards-Best-Practice-in-Explaining-Neural-Network-Decisions-with-LRP"><span class="toc-number">17.</span> <span class="toc-text"># Towards Best Practice in Explaining Neural Network Decisions with LRP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#bLIMEy-Surrogate-Prediction-Explanations-Beyond-LIME"><span class="toc-number">18.</span> <span class="toc-text"># bLIMEy: Surrogate Prediction Explanations Beyond LIME</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rule-Extraction-in-Unsupervised-Anomaly-Detection-for-Model-Explainability-Application-to-OneClass-SVM"><span class="toc-number">19.</span> <span class="toc-text"># Rule Extraction in Unsupervised Anomaly Detection for Model Explainability: Application to OneClass SVM</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#What-Would-You-Ask-the-Machine-Learning-Model-Identification-of-User-Needs-for-Model-Explanations-Based-on-Human-Model-Conversations"><span class="toc-number">20.</span> <span class="toc-text"># What Would You Ask the Machine Learning Model? Identification of User Needs for Model Explanations Based on Human-Model Conversations</span></a></li></ol>
+        
+    </div>
+</aside>
+
+</header>
+
+        <div id="content" class="content">
+            <div id="wrapper" class="wrapper" style="max-width: 800px">
+                <article class="article" itemscope itemprop="blogPost">
+    
+    <header class="article-header">
+        
+        <h1 itemprop="name">
+            XAI with code
+        </h1>
+        
+        <div class="article-meta clearfix">
+            <a class="article-date" href="https://adam-hohai.github.io/cenhelm.github.io/2022/05/23/XAI-with-code/index.html">
+    
+    <i class="icon-calendar vm"></i>
+    
+    <time class="vm" datetime="2022-05-23T10:55:00.000Z" itemprop="datePublished">2022-05-23</time>
+</a>
+
+            
+<div class="article-tag-list">
+    <i class="icon-tag vm"></i>
+    <a class="article-tag-link" href="/cenhelm.github.io/tags/%E5%8F%AF%E8%A7%A3%E9%87%8A/" rel="tag">可解释</a>
+</div>
+
+
+        </div>
+    </header>
+    
+    <section class="article-body markdown-body">
+        
+        <p>Explainable artificial intelligence with code 88篇论文汇总</p>
+<span id="more"></span>
+<h2 id="Axiomatic-Attribution-for-Deep-Networks"><a href="#Axiomatic-Attribution-for-Deep-Networks" class="headerlink" title="Axiomatic Attribution for Deep Networks"></a>Axiomatic Attribution for Deep Networks</h2><p>2017 2557<br>integrated gradients，将深度网络的预测归因于其输入。</p>
+<h2 id="GNNExplainer-Generating-Explanations-for-Graph-Neural-Networks"><a href="#GNNExplainer-Generating-Explanations-for-Graph-Neural-Networks" class="headerlink" title="GNNExplainer: Generating Explanations for Graph Neural Networks"></a>GNNExplainer: Generating Explanations for Graph Neural Networks</h2><p>2019 316<br>为图神经网络生成解释，利用图NN的递归邻域聚合方案去辨别重要的图路径，突出显示沿着路径的边缘传递的相关节点特征信息。</p>
+<h2 id="Proposed-Guidelines-for-the-Responsible-Use-of-Explainable-Machine-Learning"><a href="#Proposed-Guidelines-for-the-Responsible-Use-of-Explainable-Machine-Learning" class="headerlink" title="Proposed Guidelines for the Responsible Use of Explainable Machine Learning"></a>Proposed Guidelines for the Responsible Use of Explainable Machine Learning</h2><p>2019 14<br>综述类</p>
+<h2 id="Software-for-Dataset-wide-XAI-From-Local-Explanations-to-Global-Insights-with-Zennit-CoRelAy-and-ViRelAy"><a href="#Software-for-Dataset-wide-XAI-From-Local-Explanations-to-Global-Insights-with-Zennit-CoRelAy-and-ViRelAy" class="headerlink" title="Software for Dataset-wide XAI: From Local Explanations to Global Insights with Zennit, CoRelAy, and ViRelAy"></a>Software for Dataset-wide XAI: From Local Explanations to Global Insights with Zennit, CoRelAy, and ViRelAy</h2><p>2021 11<br>Layer-wise Relevance Propagation (LRP)事后归因解释，产生局部解释，对单样本的额所有输入特征归因得分<br>以及相关的三个框架：Zennit，CoRelAy，CoRelAy</p>
+<h2 id="SoPa-Bridging-CNNs-RNNs-and-Weighted-Finite-State-Machines"><a href="#SoPa-Bridging-CNNs-RNNs-and-Weighted-Finite-State-Machines" class="headerlink" title="SoPa: Bridging CNNs, RNNs, and Weighted Finite-State Machines"></a>SoPa: Bridging CNNs, RNNs, and Weighted Finite-State Machines</h2><p>2018 10<br>sopa模型将神经表示学习与加权有限状态自动机（WFSAs）结合，来学习传统表面模式的软版本。</p>
+<h2 id="DO-NOT-TRUST-ADDITIVE-EXPLANATIONS"><a href="#DO-NOT-TRUST-ADDITIVE-EXPLANATIONS" class="headerlink" title="DO NOT TRUST ADDITIVE EXPLANATIONS"></a>DO NOT TRUST ADDITIVE EXPLANATIONS</h2><p>2019 17<br>像shap lime BD等这些加性解释不一定忠实，提出iBD方法捕获局部交互，并使用瀑布图可视化生成的非加性解释</p>
+<h2 id="On-the-Explanation-of-Machine-Learning-Predictions-in-Clinical-Gait-Analysis"><a href="#On-the-Explanation-of-Machine-Learning-Predictions-in-Clinical-Gait-Analysis" class="headerlink" title="On the Explanation of Machine Learning Predictions in Clinical Gait Analysis"></a>On the Explanation of Machine Learning Predictions in Clinical Gait Analysis</h2><p>2020 5<br>LRP分层关联传播</p>
+<h2 id="EUCA-the-End-User-Centered-Explainable-AI-Framework"><a href="#EUCA-the-End-User-Centered-Explainable-AI-Framework" class="headerlink" title="EUCA: the End-User-Centered Explainable AI Framework"></a>EUCA: the End-User-Centered Explainable AI Framework</h2><p>2021 0<br>框架</p>
+<h2 id="Towards-Rigorous-Interpretations-a-Formalisation-of-Feature-Attribution"><a href="#Towards-Rigorous-Interpretations-a-Formalisation-of-Feature-Attribution" class="headerlink" title="Towards Rigorous Interpretations: a Formalisation of Feature Attribution"></a>Towards Rigorous Interpretations: a Formalisation of Feature Attribution</h2><p>2021 1<br>特征归因通常松散地表现为选择相关特征的子集作为预测的基本原理的过程。基于松弛函数依赖的概念的特征选择/归因形式化</p>
+<h2 id="Entropy-based-Logic-Explanations-of-Neural-Networks基于熵的神经网络逻辑解释"><a href="#Entropy-based-Logic-Explanations-of-Neural-Networks基于熵的神经网络逻辑解释" class="headerlink" title="Entropy-based Logic Explanations of Neural Networks基于熵的神经网络逻辑解释"></a>Entropy-based Logic Explanations of Neural Networks基于熵的神经网络逻辑解释</h2><p>2021 6<br>新的端到端可微分的方法，使其能够利用一阶逻辑的形式主义从神经网络中提取逻辑解释。该方法依赖于一个基于熵的准则，它可以自动识别最相关的概念。</p>
+<h2 id="Quantitative-Evaluation-of-Explainable-Graph-Neural-Networks-for-Molecular-Property-Prediction分子性质预测中可解释图神经网络的定量评价"><a href="#Quantitative-Evaluation-of-Explainable-Graph-Neural-Networks-for-Molecular-Property-Prediction分子性质预测中可解释图神经网络的定量评价" class="headerlink" title="Quantitative Evaluation of Explainable Graph Neural Networks for Molecular Property Prediction分子性质预测中可解释图神经网络的定量评价"></a>Quantitative Evaluation of Explainable Graph Neural Networks for Molecular Property Prediction分子性质预测中可解释图神经网络的定量评价</h2><p>2021 0<br>GNN</p>
+<h2 id="Explaining-deep-learning-models-for-spoofing-and-deepfake-detection-with-SHapley-Additive-exPlanations"><a href="#Explaining-deep-learning-models-for-spoofing-and-deepfake-detection-with-SHapley-Additive-exPlanations" class="headerlink" title="Explaining deep learning models for spoofing and deepfake detection with SHapley Additive exPlanations"></a>Explaining deep learning models for spoofing and deepfake detection with SHapley Additive exPlanations</h2><p>2022 1<br>shap 欺骗和伪造检测</p>
+<h2 id="GAM-e-changer-or-not-An-evaluation-of-interpretable-machine-learning-models-based-on-additive-model-constraints"><a href="#GAM-e-changer-or-not-An-evaluation-of-interpretable-machine-learning-models-based-on-additive-model-constraints" class="headerlink" title="# GAM(e) changer or not? An evaluation of interpretable machine learning models based on additive model constraints"></a># GAM(e) changer or not? An evaluation of interpretable machine learning models based on additive model constraints</h2><p>2022 0<br>广义加性模型</p>
+<h2 id="Visual-Interpretability-for-Deep-Learning-a-Survey"><a href="#Visual-Interpretability-for-Deep-Learning-a-Survey" class="headerlink" title="# Visual Interpretability for Deep Learning: a Survey"></a># Visual Interpretability for Deep Learning: a Survey</h2><p>2018 589<br>综述 CNN的解释</p>
+<h2 id="Meaningful-Data-Sampling-for-a-Faithful-Local-Explanation-Method"><a href="#Meaningful-Data-Sampling-for-a-Faithful-Local-Explanation-Method" class="headerlink" title="# Meaningful Data Sampling for a Faithful Local Explanation Method"></a># Meaningful Data Sampling for a Faithful Local Explanation Method</h2><p>2019 3<br>对于lime提出一个新的采样方法以获取扰动样本</p>
+<h2 id="Explainable-Artificial-Intelligence-XAI-Concepts-Taxonomies-Opportunities-and-Challenges-toward-Responsible-AI"><a href="#Explainable-Artificial-Intelligence-XAI-Concepts-Taxonomies-Opportunities-and-Challenges-toward-Responsible-AI" class="headerlink" title="# Explainable Artificial Intelligence (XAI): Concepts, Taxonomies, Opportunities and Challenges toward Responsible AI"></a># Explainable Artificial Intelligence (XAI): Concepts, Taxonomies, Opportunities and Challenges toward Responsible AI</h2><p>2020 2196<br>综述</p>
+<h2 id="Towards-Best-Practice-in-Explaining-Neural-Network-Decisions-with-LRP"><a href="#Towards-Best-Practice-in-Explaining-Neural-Network-Decisions-with-LRP" class="headerlink" title="# Towards Best Practice in Explaining Neural Network Decisions with LRP"></a># Towards Best Practice in Explaining Neural Network Decisions with LRP</h2><p>2020 65<br>LRP</p>
+<h2 id="bLIMEy-Surrogate-Prediction-Explanations-Beyond-LIME"><a href="#bLIMEy-Surrogate-Prediction-Explanations-Beyond-LIME" class="headerlink" title="# bLIMEy: Surrogate Prediction Explanations Beyond LIME"></a># bLIMEy: Surrogate Prediction Explanations Beyond LIME</h2><p>2019 16<br>基于lime的一个框架</p>
+<h2 id="Rule-Extraction-in-Unsupervised-Anomaly-Detection-for-Model-Explainability-Application-to-OneClass-SVM"><a href="#Rule-Extraction-in-Unsupervised-Anomaly-Detection-for-Model-Explainability-Application-to-OneClass-SVM" class="headerlink" title="# Rule Extraction in Unsupervised Anomaly Detection for Model Explainability: Application to OneClass SVM"></a># Rule Extraction in Unsupervised Anomaly Detection for Model Explainability: Application to OneClass SVM</h2><p>2022 8<br>异常检测<br>OneClass SVM模型<br>规则提取</p>
+<h2 id="What-Would-You-Ask-the-Machine-Learning-Model-Identification-of-User-Needs-for-Model-Explanations-Based-on-Human-Model-Conversations"><a href="#What-Would-You-Ask-the-Machine-Learning-Model-Identification-of-User-Needs-for-Model-Explanations-Based-on-Human-Model-Conversations" class="headerlink" title="# What Would You Ask the Machine Learning Model? Identification of User Needs for Model Explanations Based on Human-Model Conversations"></a># What Would You Ask the Machine Learning Model? Identification of User Needs for Model Explanations Based on Human-Model Conversations</h2><p>2020 4<br>人机对话系统 收集人类操作员需求</p>
+
+        
+    </section>
+</article>
+
+
+
+<a id="pagenext" href="/cenhelm.github.io/2022/04/24/%E5%8F%AF%E8%A7%A3%E9%87%8A%E6%96%B9%E6%B3%95%E7%9A%84%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87/" class="article-next" title="可解释方法的评价指标"><i class="icon-arrow-right"></i></a>
+
+
+
+
+
+            </div>
+        </div>
+        <footer class="footer">
+    Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>, Theme by <a href="https://github.com/sanonz/hexo-theme-concise" target="_blank">Concise</a>
+
+    
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?d8d752057b9f8a189a988435e7d5c309";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+    
+</footer>
+
+    </main>
+
+    <script type="text/javascript" src="https://unpkg.com/jquery@1.9.1/jquery.min.js"></script>
+    <script type="text/javascript">
+    $(function() {
+        var nodes = {
+            nav: $('#nav'),
+            aside: $('#aside'),
+            asideInner: $('#aside-inner'),
+            navInner: $('#nav-inner')
+        };
+
+        var doing = false;
+        nodes.asideInner.on('webkitAnimationEnd mozAnimationEnd oAnimationEnd oanimationend animationend', function() {
+            if (nodes.aside.hasClass('mobile-open')) {
+                nodes.aside.removeClass('mobile-open');
+            } else {
+                nodes.aside.removeClass('mobile-close panel-show');
+            }
+            doing = false;
+        });
+        $('#open-panel, #aside-mask').on('click', function() {
+            if (doing) {
+                return;
+            }
+
+            if (nodes.aside.hasClass('panel-show')) {
+                nodes.aside.addClass('mobile-close');
+            } else {
+                nodes.aside.addClass('mobile-open panel-show');
+            }
+        });
+        $('#open-menus').on('click', function() {
+            nodes.navInner.slideToggle('normal', slideDone);
+        });
+
+        if (window.innerWidth <= 960) {
+            setTimeout(function() {
+                nodes.navInner.slideUp('normal', slideDone);
+            }, 3000);
+        }
+
+        function slideDone() {
+            if (nodes.navInner.css('display') !== 'none') {
+                nodes.navInner.css('display', '');
+            }
+        }
+
+        $(window).on('resize', function() {
+            if ($(this).width() > 960) {
+                nodes.navInner.css('display', '');
+            }
+        });
+    });
+    </script>
+    
+        
+<script src="/cenhelm.github.io/js/scrollspy.min.js"></script>
+
+        <script type="text/javascript">
+        $(document.body).scrollspy({target: '#aside-inner'});
+
+        $(window).on('resize', function() {
+            var hw = $('#header').width();
+            var ww = $('#wrapper').width();
+            var space = ($(this).width() - hw - ww) / 2 / 2;
+
+            var pageprev = $('#pageprev');
+            var pagenext = $('#pagenext');
+            var avg = (pageprev.width() + pagenext.width()) / 2
+
+            if(space > avg) {
+                var len = space - avg / 2;
+                var styles = {position: 'fixed', top: '50%', marginTop: - (pageprev.width() + pagenext.width()) / 4}
+                pageprev.css($.extend({left: hw + len}, styles));
+                pagenext.css($.extend({right: len}, styles));
+            } else {
+                pageprev.removeAttr('style');
+                pagenext.removeAttr('style');
+            }
+        }).trigger('resize');
+        </script>
+    
+
+<script src="/cenhelm.github.io/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/cenhelm.github.io/live2dw/assets/shizuku.model.json"},"display":{"position":"left","width":150,"height":300,"hOffset":150},"mobile":{"show":false},"log":false});</script></body>
+</html>
